@@ -431,11 +431,11 @@ export class ControlPanel extends LitElement implements Controller {
       >
         <div class="relative h-full">
           <div
-            class="absolute inset-y-0 left-0 w-full origin-left bg-malibu-blue transition-transform duration-200 ease-out"
+            class="absolute inset-y-0 left-0 w-full origin-left bg-[#7fb24f] transition-transform duration-200 ease-out"
             style="transform: scaleX(${greenPercent / 100});"
           ></div>
           <div
-            class="absolute inset-y-0 left-0 w-full origin-left bg-aquarius transition-transform duration-200 ease-out"
+            class="absolute inset-y-0 left-0 w-full origin-left bg-[#3f5a2c] transition-transform duration-200 ease-out"
             style="transform: translateX(${greenPercent}%) scaleX(${
               orangePercent / 100
             });"
@@ -500,11 +500,11 @@ export class ControlPanel extends LitElement implements Controller {
       >
         <div class="relative h-full">
           <div
-            class="absolute inset-y-0 left-0 w-full origin-left bg-malibu-blue transition-transform duration-200 ease-out"
+            class="absolute inset-y-0 left-0 w-full origin-left bg-[#7fb24f] transition-transform duration-200 ease-out"
             style="transform: scaleX(${greenPercent / 100});"
           ></div>
           <div
-            class="absolute inset-y-0 left-0 w-full origin-left bg-aquarius transition-transform duration-200 ease-out"
+            class="absolute inset-y-0 left-0 w-full origin-left bg-[#3f5a2c] transition-transform duration-200 ease-out"
             style="transform: translateX(${greenPercent}%) scaleX(${
               orangePercent / 100
             });"

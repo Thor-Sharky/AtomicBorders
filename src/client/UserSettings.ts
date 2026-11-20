@@ -450,7 +450,7 @@ export class UserSettings {
   }
 
   mapLayers() {
-    return this.getBool(MAP_LAYERS_KEY, true);
+    return this.getBool(MAP_LAYERS_KEY, false);
   }
 
   alertFrame() {

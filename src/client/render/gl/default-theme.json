@@ -7,7 +7,7 @@
     "Yellow": "#e7b008",
     "Orange": "#ff7f0e",
     "Green": "#41be52",
-    "Bot": "#d1cdc7",
+    "Bot": "#6c6b61",
     "Humans": "#2962ff",
     "Nations": "#eb3333"
   },
@@ -484,7 +484,7 @@
     "#fff5d2",
     "#fff0dc"
   ],
-  "borderDarken": 0.125,
+  "borderDarken": 0.32,
   "borderLightnessScale": 1,
   "defendedBorderDarkenLight": 0.2,
   "defendedBorderDarkenDark": 0.4,

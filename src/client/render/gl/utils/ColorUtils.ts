@@ -161,11 +161,12 @@ export function encodeTerrainTile(
       b = Math.min(255, base[2] + m);
     }
   } else if (isShoreline) {
-    // Shoreline water — computed dynamically by blending 70% ocean color and 30% white
+    // Shoreline water — a slightly lifted shade of the ocean color, so the
+    // coast reads as a soft band on the dark tactical map.
     const base = oceanColor ?? DEEP_WATER_BASE;
-    r = Math.round(0.7 * base[0] + 76.5);
-    g = Math.round(0.7 * base[1] + 76.5);
-    b = Math.round(0.7 * base[2] + 76.5);
+    r = Math.min(255, base[0] + 14);
+    g = Math.min(255, base[1] + 18);
+    b = Math.min(255, base[2] + 20);
   } else {
     // Deep water — darkens with depth (magnitude). The base color sets the
     // shallowest (brightest) shade; the per-depth gradient is preserved by

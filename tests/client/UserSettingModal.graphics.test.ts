@@ -103,6 +103,8 @@ function resetGraphicsSettings() {
   settings.setGraphicsOverrides({});
   settings.setGraphicsPresets({});
   settings.removeCached(MAP_LAYERS_KEY);
+  // Map layers default to off in this fork; these tests start from "on".
+  settings.toggleMapLayers();
 }
 
 describe("Graphics tab: advanced options in the graphics panel", () => {

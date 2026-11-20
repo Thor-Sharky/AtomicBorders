@@ -45,6 +45,8 @@ describe("MapLayerController", () => {
     const settings = new UserSettings();
     settings.setGraphicsOverrides({});
     settings.removeCached(MAP_LAYERS_KEY);
+    // Map layers default to off in this fork; these tests start from "on".
+    settings.toggleMapLayers();
   });
 
   it("applies each layer's stored state once the images load", async () => {

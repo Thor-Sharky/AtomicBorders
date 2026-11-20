@@ -1,0 +1,138 @@
+/*
+ * Tactical HUD theme.
+ *
+ * In-match restyle of the HUD: dark translucent "command terminal" panels,
+ * thin olive borders, square corners, a monospace face for numbers and
+ * small spaced-out caps for headings. Scoped to body.in-game so the
+ * homepage and menus keep their own look.
+ *
+ * Unlayered on purpose: Tailwind 4 utilities live in @layer utilities, and
+ * unlayered rules win over layered ones regardless of specificity.
+ */
+
+:root {
+  --hud-bg: rgba(9, 14, 18, 0.9);
+  --hud-bg-soft: rgba(18, 26, 30, 0.85);
+  --hud-border: rgba(158, 176, 120, 0.3);
+  --hud-border-strong: rgba(158, 176, 120, 0.55);
+  --hud-accent: #9fd46b;
+  --hud-text: #dcdfd2;
+  --hud-dim: #8b927f;
+  --hud-gold: #e8c15a;
+  --hud-danger: #e0573f;
+  --hud-mono:
+    ui-monospace, "Cascadia Mono", "Consolas", "Roboto Mono", "Courier New",
+    monospace;
+}
+
+/* Every HUD component that sits over the map. */
+body.in-game
+  :is(
+    control-panel,
+    unit-display,
+    game-left-sidebar,
+    game-right-sidebar,
+    events-display,
+    attacks-display,
+    actionable-events,
+    chat-display,
+    player-info-overlay,
+    replay-panel,
+    spawn-timer,
+    immunity-timer
+  ) {
+  color: var(--hud-text);
+  font-family: var(--hud-mono);
+  letter-spacing: 0.02em;
+}
+
+/* --- Panels ------------------------------------------------------------ */
+
+body.in-game
+  :is(
+    .bg-gray-800\/92,
+    .bg-gray-800\/90,
+    .bg-gray-800,
+    .bg-gray-900\/60,
+    .bg-black\/60,
+    .bg-black\/70,
+    .bg-black\/80
+  ) {
+  background-color: var(--hud-bg) !important;
+  border: 1px solid var(--hud-border);
+  border-radius: 3px !important;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 6px 18px rgba(0, 0, 0, 0.45);
+  backdrop-filter: none;
+}
+
+body.in-game :is(.bg-gray-700\/50, .bg-gray-600, .bg-slate-400\/20) {
+  background-color: var(--hud-bg-soft) !important;
+}
+
+body.in-game
+  :is(
+    control-panel,
+    unit-display,
+    game-left-sidebar,
+    game-right-sidebar,
+    events-display,
+    attacks-display,
+    player-info-overlay
+  )
+  :is(.rounded-md, .rounded-lg, .rounded-xl, .rounded) {
+  border-radius: 3px !important;
+}
+
+body.in-game :is(.border-gray-600, .border-gray-500, .border-slate-500) {
+  border-color: var(--hud-border) !important;
+}
+
+/* --- Type -------------------------------------------------------------- */
+
+/* Table headers and section labels: small, spaced, accent-coloured caps. */
+body.in-game
+  :is(game-left-sidebar, game-right-sidebar, player-info-overlay)
+  th {
+  color: var(--hud-accent);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+body.in-game .tabular-nums {
+  font-family: var(--hud-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+body.in-game :is(control-panel, unit-display) .text-white {
+  color: var(--hud-text) !important;
+}
+
+/* Gold readout: keep the gold, drop the bright pill outline. */
+body.in-game control-panel .border-yellow-400 {
+  border-color: rgba(232, 193, 90, 0.35) !important;
+}
+body.in-game control-panel .text-yellow-400 {
+  color: var(--hud-gold) !important;
+}
+
+/* --- Controls ---------------------------------------------------------- */
+
+body.in-game :is(control-panel, unit-display) input[type="range"] {
+  accent-color: var(--hud-accent);
+}
+
+/* Build bar slots: framed tiles that light up green on hover. */
+body.in-game unit-display :is(button, [role="button"]) {
+  border-radius: 3px;
+  transition:
+    border-color 0.12s ease,
+    background-color 0.12s ease;
+}
+body.in-game unit-display :is(button, [role="button"]):hover {
+  border-color: var(--hud-border-strong) !important;
+  background-color: rgba(159, 212, 107, 0.08) !important;
+}
