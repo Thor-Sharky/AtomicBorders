@@ -62,3 +62,30 @@ Restart the server after changing `.env.local`.
 
 Not available (OpenFront paid/platform features): store, cosmetics,
 subscriptions, Steam, email magic links, clan funds.
+
+## What it serves
+
+| Area | Endpoints |
+| --- | --- |
+| Sign-in | `/auth/login/{discord,google}`, `/auth/callback/*`, `/auth/refresh`, `/auth/logout`, `/auth/revoke`, `/.well-known/jwks.json`, `/users/@me` |
+| Results | `POST /game/:id` (game servers), `GET /game/:id` (replays), `/archive_singleplayer_game` |
+| Profiles | `/public/player/:publicId`, `/public/player/:publicId/games` |
+| Leaderboard | `/leaderboard/ranked` (1v1, 2v2 and FFA Elo ladders), `/users/@me/ffa_rank_position` |
+| Clans | `/clans` (browse, and `POST` to create), `/clans/:tag` + members, join/leave, requests, kick/promote/demote/transfer, bans, games; `/public/clans/leaderboard`; `/reserved_clan_tags` (game servers) |
+| Ranked | `WS /matchmaking/join?mode=1v1|2v2`, `POST /matchmaking/checkin` (game servers) |
+
+Ratings: Elo, start 1000, K=32. The FFA ladder comes from public free-for-all
+games (the winner takes points from every rated opponent); 1v1 and 2v2 come
+from ranked matches. Solo games count toward personal stats only.
+
+Ranked and clan creation need a signed-in (Discord/Google) account; guests can
+play everything else and keep their stats when they sign in.
+
+## Production checklist
+
+- Point `api.<DOMAIN>` at the server and proxy it to `API_PORT` (8787), with
+  WebSocket upgrades allowed (ranked uses `/matchmaking/join`).
+- Set `DOMAIN`, `API_KEY` (any long random secret; game servers and the API
+  share it), and the OAuth secrets.
+- Keep `DATA_DIR` on persistent storage and back it up.
+- One API per deployment: the SQLite database isn't shared between servers.
