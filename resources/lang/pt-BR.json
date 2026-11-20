@@ -689,7 +689,7 @@
     "retry": "Repetir",
     "starting_link": "Iniciando vinculação de conta...",
     "ticket_unavailable": "Não foi possível iniciar a vinculação de conta. Você pode tentar novamente, ou voltar ao jogo.",
-    "title": "OpenFront - Configuração de Conta"
+    "title": "Atomic Borders"
   },
   "desktop_presence": {
     "in_game": "Em jogo",
@@ -1443,7 +1443,7 @@
     "solo": "Solo",
     "store": "Loja",
     "terms_of_service": "Termos de Serviço",
-    "title": "OpenFront (ALFA)",
+    "title": "Atomic Borders",
     "troubleshooting": "Solução de problemas",
     "tutorial": "Tutorial",
     "user_avatar_alt": "Avatar de {username}",

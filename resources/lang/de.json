@@ -689,7 +689,7 @@
     "retry": "Wiederholen",
     "starting_link": "Starte Konto Verknüpfung…",
     "ticket_unavailable": "Die Konto‑Verknüpfung konnte gerade nicht gestartet werden. Du kannst es erneut versuchen oder direkt ins Spiel weitergehen.",
-    "title": "OpenFront-Konto einrichten"
+    "title": "Atomic Borders"
   },
   "desktop_presence": {
     "in_game": "Im Spiel",
@@ -1443,7 +1443,7 @@
     "solo": "Solo",
     "store": "Shop",
     "terms_of_service": "Nutzungsbedingungen",
-    "title": "OpenFront (ALPHA)",
+    "title": "Atomic Borders",
     "troubleshooting": "Fehlerbehebung",
     "tutorial": "Tutorial",
     "user_avatar_alt": "{username}'s Avatar",

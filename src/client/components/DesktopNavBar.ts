@@ -54,14 +54,14 @@ export class DesktopNavBar extends LitElement {
     // not the sticky host, so the host's offset below a header ad stays exact.
     return html`
       <nav
-        class="hidden lg:flex w-full bg-zinc-900/90 backdrop-blur-md items-center justify-center gap-8 py-4 shrink-0 z-50 relative compact:[zoom:0.75]"
+        class="ab-nav hidden lg:flex w-full items-center gap-7 px-8 py-3 shrink-0 z-50 relative compact:[zoom:0.75]"
       >
-        <div class="flex flex-col items-center justify-center">
-          <div class="h-8">
+        <div class="flex flex-col items-start justify-center mr-4">
+          <div class="h-9">
             <img
               class="block h-full aspect-[1364/259]"
-              src=${assetUrl("images/OpenFrontLogo.svg")}
-              alt="OpenFront"
+              src=${assetUrl("images/AtomicBordersLogo.svg")}
+              alt="Atomic Borders"
             />
           </div>
           <div
@@ -72,16 +72,17 @@ export class DesktopNavBar extends LitElement {
         <button
           class="nav-menu-item ${
             currentPage === "page-play" ? "active" : ""
-          } text-white/70 hover:text-malibu-blue  font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-malibu-blue "
+          } ab-nav-item "
           data-page="page-play"
           data-i18n="main.play"
         ></button>
         <!-- Desktop Navigation Menu Items -->
-        <div class="relative no-game-portal">
+        <!-- Store/Inventory: OpenFront paid cosmetics (closed API), hidden in Atomic Borders. -->
+        <div class="relative no-game-portal hidden">
           <button
             class="nav-menu-item ${
               currentPage === "page-item-store" ? "active" : ""
-            } text-white/70 hover:text-malibu-blue  font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-malibu-blue "
+            } ab-nav-item "
             data-page="page-item-store"
             data-i18n="main.store"
             @click=${this._notifications.onStoreClick}
@@ -102,17 +103,18 @@ export class DesktopNavBar extends LitElement {
         <button
           class="nav-menu-item ${
             currentPage === "page-inventory" ? "active" : ""
-          } text-white/70 hover:text-malibu-blue font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-malibu-blue"
+          } ab-nav-item "
           data-page="page-inventory"
+          hidden
           data-i18n="main.inventory"
         ></button>
         <button
-          class="nav-menu-item text-white/70 hover:text-malibu-blue  font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-malibu-blue "
+          class="nav-menu-item ab-nav-item "
           data-page="page-leaderboard"
           data-i18n="main.leaderboard"
         ></button>
         <button
-          class="no-game-portal nav-menu-item text-white/70 hover:text-blue-500 font-medium tracking-wider uppercase cursor-pointer transition-colors [&.active]:text-blue-500"
+          class="no-game-portal nav-menu-item ab-nav-item "
           data-page="page-clan"
           data-i18n="main.clans"
         ></button>
@@ -120,7 +122,9 @@ export class DesktopNavBar extends LitElement {
              account/notification/utility affordances rather than page links,
              so they sit tight together behind a divider instead of in the nav
              item list. -->
-        <div class="flex items-center gap-1 pl-5 ml-1 border-l border-white/10">
+        <div
+          class="flex items-center gap-1 pl-5 ml-auto border-l border-white/10"
+        >
           <nav-utility-icons size="desktop"></nav-utility-icons>
           <nav-account-menu variant="desktop"></nav-account-menu>
         </div>

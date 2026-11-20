@@ -383,55 +383,42 @@ describe("the upcoming heading (the route to the lobby browser)", () => {
 });
 
 /**
- * At sm+ the block is a placed grid, so the class strings are the layout.
- * These pin the three states where an unconditional placement collided or
- * left a track empty: loading, a snapshot with no FFA lobby, and a column
- * with only one of its two cards.
+ * The Atomic Borders console: command column on the left, live operations on
+ * the right. These pin the three states that used to collide or leave a slot
+ * empty: loading, a snapshot with no FFA lobby, and one vs two side cards.
  */
-describe("grid placement", () => {
-  const section = () => selector.querySelector("section")!;
-  const heroSlot = () =>
-    selector.querySelector(":scope > div > div.sm\\:col-start-1");
+describe("console layout", () => {
+  const ops = () => selector.querySelector("section.ab-ops")!;
+  const feature = () => selector.querySelector(".ab-ops-feature");
 
-  it("keeps the upcoming column beside the spinner while loading", () => {
-    expect(heroSlot()).not.toBeNull();
-    const spinner = heroSlot()!.querySelector('div[role="status"]');
-    expect(spinner).not.toBeNull();
-    expect(spinner!.className).toContain("h-44 sm:h-full");
-    expect(section().className).toContain("sm:col-start-2");
-    expect(section().className).not.toContain("sm:col-span-2");
+  it("shows the command column and a loading spinner in the feature slot", () => {
+    expect(selector.querySelector("aside.ab-command")).not.toBeNull();
+    expect(selector.querySelector("button.ab-deploy")).not.toBeNull();
+    expect(feature()).not.toBeNull();
+    expect(feature()!.querySelector('div[role="status"]')).not.toBeNull();
+    expect(ops()).not.toBeNull();
   });
 
   it("renders a static placeholder without role=status when loaded without an FFA lobby", async () => {
     await pushLobbies({ team: [publicLobby("team-1")] });
-    expect(heroSlot()).not.toBeNull();
-    expect(heroSlot()!.querySelector('div[role="status"]')).toBeNull();
-    const placeholder = heroSlot()!.querySelector("div.rounded-2xl.bg-surface");
-    expect(placeholder).not.toBeNull();
-    expect(placeholder!.className).toContain("h-44 sm:h-full");
-    expect(section().className).toContain("sm:col-start-2");
-    expect(section().className).not.toContain("sm:col-span-2");
+    expect(feature()!.querySelector('div[role="status"]')).toBeNull();
+    expect(feature()!.querySelector("div.ab-empty")).not.toBeNull();
   });
 
-  it("lets a lone card take both card rows", async () => {
+  it("renders a lone side card", async () => {
     await pushLobbies({
       ffa: [publicLobby("ffa-1")],
       team: [publicLobby("t")],
     });
-    const card = section().querySelector("div.sm\\:min-h-0")!;
-    expect(card.className).toContain("sm:row-start-2 sm:row-span-2");
+    expect(ops().querySelectorAll(".ab-ops-card")).toHaveLength(1);
   });
 
-  it("stacks two cards on their own rows", async () => {
+  it("renders both side cards", async () => {
     await pushLobbies({
       ffa: [publicLobby("ffa-1")],
       team: [publicLobby("t")],
       special: [publicLobby("s")],
     });
-    const rows = Array.from(section().querySelectorAll("div.sm\\:min-h-0")).map(
-      (c) => c.className,
-    );
-    expect(rows.some((c) => c.includes("sm:row-start-3"))).toBe(true);
-    expect(rows.some((c) => c.includes("sm:row-span-2"))).toBe(false);
+    expect(ops().querySelectorAll(".ab-ops-card")).toHaveLength(2);
   });
 });

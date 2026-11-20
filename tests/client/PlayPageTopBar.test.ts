@@ -74,27 +74,15 @@ describe("play-page mobile top bar", () => {
     });
   });
 
-  describe("top strip layout", () => {
+  describe("callsign bar", () => {
     beforeEach(mount);
 
-    it("marks the top strip as group/strip for descendant streaming-live overrides", () => {
-      const strip = el.querySelector(".group\\/strip");
-      expect(strip).not.toBeNull();
-      expect(strip?.className).toContain(
-        "lg:has-[.streaming-live]:grid-cols-[2fr_1fr]",
-      );
-
-      const streamingNow = strip!.querySelector("streaming-now");
-      expect(streamingNow).not.toBeNull();
-      expect(strip!.matches(":has(.streaming-live)")).toBe(false);
-
-      streamingNow!.classList.add("streaming-live");
-      expect(strip!.matches(":has(.streaming-live)")).toBe(true);
-      expect(
-        el.querySelector(
-          ":where(.group\\/strip):has(.streaming-live) username-input",
-        ),
-      ).not.toBeNull();
+    it("frames the username input in the callsign bar, with no news or stream panels", () => {
+      const bar = el.querySelector(".ab-callsign");
+      expect(bar).not.toBeNull();
+      expect(bar!.querySelector("username-input")).not.toBeNull();
+      expect(el.querySelector("news-box")).toBeNull();
+      expect(el.querySelector("streaming-now")).toBeNull();
     });
   });
 });

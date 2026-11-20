@@ -597,8 +597,8 @@ class Client {
     await customElements.whenDefined("desktop-nav-bar");
 
     const openFrontFont = new FontFace(
-      "OpenFront",
-      `url(${assetUrl("fonts/OpenFront.ttf")})`,
+      "AtomicDisplay",
+      `url(${assetUrl("fonts/Oxanium.ttf")})`,
     );
     document.fonts.add(openFrontFont);
     openFrontFont.load().catch(() => {});

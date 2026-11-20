@@ -1,0 +1,503 @@
+/*
+ * Atomic Borders main menu.
+ *
+ * Tactical "command console" look shared with the in-game HUD
+ * (tactical-hud.css): near-black navy, olive-green accent, amber warnings,
+ * square corners, Oxanium display type. Unlayered so it wins over Tailwind's
+ * @layer utilities.
+ */
+
+:root {
+  --ab-bg: #070d13;
+  --ab-bg-2: #0d1822;
+  --ab-panel: rgba(10, 17, 23, 0.82);
+  --ab-panel-solid: #0c151d;
+  --ab-line: rgba(159, 212, 107, 0.22);
+  --ab-line-strong: rgba(159, 212, 107, 0.55);
+  --ab-green: #9fd46b;
+  --ab-green-deep: #6fa23f;
+  --ab-amber: #e8b33f;
+  --ab-text: #e4e7da;
+  --ab-dim: #8d9583;
+  --ab-display: "AtomicDisplay", "Oxanium", Inter, Arial, sans-serif;
+  --ab-mono:
+    ui-monospace, "Cascadia Mono", "Consolas", "Roboto Mono", monospace;
+
+  /* Tailwind theme colours used across the menu. */
+  --color-surface: #0c151d;
+  --color-malibu-blue: #6fa23f;
+  --color-aquarius: #9fd46b;
+}
+
+body:not(.in-game) {
+  background-color: var(--ab-bg) !important;
+}
+
+/* --- Backdrop ---------------------------------------------------------- */
+
+.ab-backdrop {
+  background:
+    radial-gradient(
+      ellipse at 70% 35%,
+      rgba(31, 52, 66, 0.55),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 15% 90%,
+      rgba(43, 58, 30, 0.35),
+      transparent 55%
+    ),
+    linear-gradient(180deg, var(--ab-bg-2), var(--ab-bg));
+  overflow: hidden;
+}
+
+.ab-backdrop-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(159, 212, 107, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(159, 212, 107, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(159, 212, 107, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(159, 212, 107, 0.025) 1px, transparent 1px);
+  background-size:
+    120px 120px,
+    120px 120px,
+    24px 24px,
+    24px 24px;
+  mask-image: radial-gradient(ellipse at 60% 40%, #000 30%, transparent 85%);
+}
+
+.ab-backdrop-radar {
+  position: absolute;
+  width: 110vmax;
+  height: 110vmax;
+  right: -35vmax;
+  top: -40vmax;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(
+      circle,
+      transparent 0 11vmax,
+      rgba(159, 212, 107, 0.07) 11vmax calc(11vmax + 1px)
+    ),
+    conic-gradient(
+      from 0deg,
+      rgba(159, 212, 107, 0.16),
+      rgba(159, 212, 107, 0) 50deg,
+      transparent 360deg
+    );
+  animation: ab-sweep 9s linear infinite;
+}
+
+.ab-backdrop-scan {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.018) 0 1px,
+    transparent 1px 3px
+  );
+  pointer-events: none;
+}
+
+@keyframes ab-sweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ab-backdrop-radar {
+    animation: none;
+  }
+}
+
+/* --- Nav bar ----------------------------------------------------------- */
+
+.ab-nav {
+  background: linear-gradient(
+    180deg,
+    rgba(5, 10, 14, 0.96),
+    rgba(8, 14, 19, 0.88)
+  );
+  border-bottom: 1px solid var(--ab-line);
+  backdrop-filter: blur(8px);
+}
+
+.ab-nav-item {
+  position: relative;
+  padding: 0.35rem 0.1rem;
+  color: var(--ab-dim);
+  font-family: var(--ab-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+.ab-nav-item:hover {
+  color: var(--ab-text);
+}
+.ab-nav-item.active {
+  color: var(--ab-green);
+}
+.ab-nav-item.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.85rem;
+  height: 2px;
+  background: var(--ab-green);
+  box-shadow: 0 0 12px rgba(159, 212, 107, 0.7);
+}
+
+#game-version {
+  font-family: var(--ab-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--ab-dim) !important;
+}
+
+/* --- Callsign ---------------------------------------------------------- */
+
+.ab-callsign {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--ab-line);
+  background: var(--ab-panel);
+  margin-top: 1rem;
+}
+
+.ab-callsign-label {
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-right: 1px solid var(--ab-line);
+  background: rgba(159, 212, 107, 0.08);
+  color: var(--ab-green);
+  font-family: var(--ab-mono);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ab-callsign-field {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: visible;
+}
+
+/* --- Command column ---------------------------------------------------- */
+
+.ab-console {
+  margin-top: 0.75rem;
+}
+
+.ab-kicker {
+  color: var(--ab-green);
+  font-family: var(--ab-mono);
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.ab-hero-title {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: var(--ab-display);
+  font-weight: 800;
+  font-size: clamp(2.6rem, 5.2vw, 4.75rem);
+  line-height: 0.92;
+  letter-spacing: 0.04em;
+  color: var(--ab-text);
+  text-shadow: 0 0 40px rgba(159, 212, 107, 0.12);
+}
+.ab-hero-accent {
+  color: var(--ab-green);
+}
+
+.ab-tagline {
+  margin: 0;
+  max-width: 28rem;
+  color: var(--ab-dim);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border-left: 2px solid var(--ab-amber);
+  padding-left: 0.75rem;
+}
+
+.ab-deploy {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.05rem 1.25rem;
+  border: 1px solid var(--ab-green);
+  background: linear-gradient(135deg, var(--ab-green), var(--ab-green-deep));
+  color: #0b1408;
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%);
+  box-shadow: 0 10px 30px rgba(111, 162, 63, 0.25);
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+.ab-deploy:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+.ab-deploy:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+.ab-deploy-icon {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 2px solid rgba(11, 20, 8, 0.6);
+  font-size: 1rem;
+}
+.ab-deploy-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+}
+.ab-deploy-main {
+  font-family: var(--ab-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ab-deploy-sub {
+  font-family: var(--ab-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.ab-cmd-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ab-line);
+  background: var(--ab-panel);
+}
+
+.ab-cmd {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(159, 212, 107, 0.1);
+  color: var(--ab-text);
+  font-family: var(--ab-display);
+  font-weight: 600;
+  font-size: 0.98rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    padding-left 0.12s ease;
+}
+.ab-cmd:last-child {
+  border-bottom: 0;
+}
+.ab-cmd:hover {
+  background: rgba(159, 212, 107, 0.08);
+  padding-left: 1.3rem;
+}
+.ab-cmd::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--ab-green);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.ab-cmd:hover::before {
+  opacity: 1;
+}
+.ab-cmd-index {
+  color: var(--ab-dim);
+  font-family: var(--ab-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+.ab-cmd-label {
+  flex: 1;
+}
+.ab-cmd-chevron {
+  color: var(--ab-green);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.ab-cmd-badge {
+  min-width: 1.4rem;
+  padding: 0 0.4rem;
+  background: var(--ab-amber);
+  color: #1a1204;
+  font-family: var(--ab-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0;
+}
+.ab-cmd-highlight .ab-cmd-label {
+  color: var(--ab-amber);
+}
+
+/* --- Live operations --------------------------------------------------- */
+
+.ab-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.5rem;
+  padding: 0.3rem 0.4rem 0.3rem 0.85rem;
+  border: 1px solid var(--ab-line);
+  background: var(--ab-panel);
+}
+.ab-panel-head h2 {
+  margin: 0;
+}
+.ab-panel-head h2 > button {
+  border-radius: 0 !important;
+  border-color: var(--ab-line) !important;
+  background: transparent !important;
+}
+.ab-panel-head h2 > button > span:last-child {
+  border-radius: 0 !important;
+  background: var(--ab-green-deep) !important;
+  color: #0b1408 !important;
+}
+.ab-panel-title {
+  color: var(--ab-text);
+  font-family: var(--ab-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.ab-live-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: #e0573f;
+  box-shadow: 0 0 0 0 rgba(224, 87, 63, 0.6);
+  animation: ab-pulse 1.8s ease-out infinite;
+}
+@keyframes ab-pulse {
+  70% {
+    box-shadow: 0 0 0 9px rgba(224, 87, 63, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(224, 87, 63, 0);
+  }
+}
+
+/* Lobby cards (LobbyCard.ts): square, framed, olive glow on hover. */
+.ab-ops button.group.\@container {
+  border-radius: 0 !important;
+  border: 1px solid var(--ab-line);
+  background: var(--ab-panel-solid);
+  box-shadow: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.ab-ops button.group.\@container:hover {
+  border-color: var(--ab-line-strong);
+  box-shadow:
+    0 0 0 1px var(--ab-line-strong),
+    0 12px 40px rgba(0, 0, 0, 0.45);
+}
+.ab-ops button.group.\@container img {
+  filter: saturate(0.75) brightness(0.85) sepia(0.15);
+}
+.ab-ops button.group.\@container [class*="bg-black/65"] {
+  background: linear-gradient(
+    0deg,
+    rgba(5, 10, 14, 0.94),
+    rgba(5, 10, 14, 0.7)
+  );
+  border-top: 1px solid var(--ab-line);
+}
+.ab-ops button.group.\@container [class*="rounded"] {
+  border-radius: 0 !important;
+}
+.ab-ops-feature button.group.\@container {
+  height: clamp(15rem, 34vh, 22rem) !important;
+}
+.ab-ops-card button.group.\@container {
+  height: 10.5rem !important;
+}
+
+.ab-spinner {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  border: 4px solid rgba(159, 212, 107, 0.2);
+  border-top-color: var(--ab-green);
+  animation: ab-sweep 0.9s linear infinite;
+}
+.ab-empty {
+  border: 1px dashed var(--ab-line);
+  background: var(--ab-panel);
+}
+
+/* --- Footer ------------------------------------------------------------ */
+
+.ab-footer {
+  background: rgba(5, 10, 14, 0.94);
+  border-top: 1px solid var(--ab-line) !important;
+  color: var(--ab-dim) !important;
+  font-family: var(--ab-mono);
+}
+.ab-footer-links a {
+  color: var(--ab-dim);
+  transition: color 0.15s ease;
+}
+.ab-footer-links a:hover {
+  color: var(--ab-green);
+}
+
+/* --- Menu-wide polish -------------------------------------------------- */
+
+body:not(.in-game) ::selection {
+  background: rgba(159, 212, 107, 0.35);
+}
+
+/* --- Phones ------------------------------------------------------------ */
+
+@media (max-width: 639px) {
+  .ab-callsign-label {
+    display: none;
+  }
+  .ab-callsign {
+    margin-top: 0.5rem;
+  }
+  .ab-panel-title {
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+  }
+  .ab-deploy-main {
+    font-size: 1.35rem;
+  }
+}

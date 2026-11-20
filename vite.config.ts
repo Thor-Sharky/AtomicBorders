@@ -301,7 +301,7 @@ export default defineConfig(({ mode }) => {
       cdnBase,
     ),
     gameplayScreenshotUrl: buildAssetUrl(
-      "images/KeyArt.jpg",
+      "images/KeyArt.png",
       assetManifest,
       cdnBase,
     ),
@@ -311,11 +311,11 @@ export default defineConfig(({ mode }) => {
       cdnBase,
     ),
     desktopLogoImageUrl: buildAssetUrl(
-      "images/OpenFront.png",
+      "images/AtomicBorders.png",
       assetManifest,
       cdnBase,
     ),
-    mobileLogoImageUrl: buildAssetUrl("images/OF.png", assetManifest, cdnBase),
+    mobileLogoImageUrl: buildAssetUrl("images/AB.png", assetManifest, cdnBase),
   };
 
   // Vite's HTML transform replaces the source <script src="/src/client/Main.ts">

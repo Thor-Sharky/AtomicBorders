@@ -689,7 +689,7 @@
     "retry": "Спробувати знову",
     "starting_link": "Початок прив’язування акаунту…",
     "ticket_unavailable": "Не вдалося почати прив’язування акаунту. Ви можете спробувати знову або перейти до гри.",
-    "title": "OpenFront — Налаштування акаунту"
+    "title": "Atomic Borders"
   },
   "desktop_presence": {
     "in_game": "У грі",
@@ -1443,7 +1443,7 @@
     "solo": "Соло",
     "store": "Крамниця",
     "terms_of_service": "Умови користування",
-    "title": "OpenFront (АЛЬФА)",
+    "title": "Atomic Borders",
     "troubleshooting": "Усунення неполадок",
     "tutorial": "Посібник",
     "user_avatar_alt": "Аватар {username}",

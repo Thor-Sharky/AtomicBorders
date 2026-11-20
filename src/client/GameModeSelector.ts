@@ -54,15 +54,7 @@ import {
 } from "./Utils";
 import { isReplayShellHost } from "./VersionedReplay";
 
-const PRIMARY_ACTION =
-  "bg-malibu-blue hover:bg-aquarius active:bg-malibu-blue/80 hover:scale-y-105 hover:scale-x-[1.01]";
-const SECONDARY_ACTION =
-  "bg-surface hover:brightness-[1.08] active:brightness-[0.95] hover:scale-105 hover:shadow-[var(--shadow-action-card-hover)]";
 const DISABLED = "opacity-50 cursor-not-allowed pointer-events-none";
-/** Tutorial card: the panel's gold, dark text for contrast. */
-const TUTORIAL_ACTION =
-  "bg-cyber-yellow hover:bg-yellow-300 active:bg-cyber-yellow/80 !text-gray-900 hover:scale-y-105 hover:scale-x-[1.01]";
-
 /** The Tutorial card shows beside Solo until the player has played this many games. */
 const TUTORIAL_CARD_MAX_GAMES = 5;
 
@@ -649,131 +641,137 @@ export class GameModeSelector extends LitElement {
     const ffa = this.lobbies?.games?.["ffa"]?.[0];
     const teams = this.lobbies?.games?.["team"]?.[0];
     const special = this.lobbies?.games?.["special"]?.[0];
-    // A lone secondary card takes both of the column's card rows.
-    const cardRows =
-      teams && special
-        ? { special: "sm:row-start-2", teams: "sm:row-start-3" }
-        : {
-            special: "sm:row-start-2 sm:row-span-2",
-            teams: "sm:row-start-2 sm:row-span-2",
-          };
 
-    // DOM is in phone order; sm+ places the same elements onto a grid and
-    // reading-flow keeps focus order following the rows (Chromium only).
-    // On compact screens (styles.css) Solo/Tutorial sit under the hero card only,
-    // and the lobby column runs down beside them, so its two cards get that height.
+    // Atomic Borders command console: the hero + command list on the left,
+    // live operations (public lobbies) on the right. Phones stack them.
     return html`
       <div
-        class="flex flex-col gap-4 sm:compact:gap-3 w-full px-4 pb-4 mx-auto sm:px-0 sm:pb-0 sm:grid sm:grid-cols-[2fr_1fr] sm:grid-rows-[min(24rem,40vh)_auto_auto] sm:compact:grid-rows-[minmax(min(24rem,40vh),auto)_3.5rem_auto] desktop:sm:grid-rows-[40vh_auto_auto] sm:[reading-flow:grid-rows]"
+        class="ab-console grid w-full grid-cols-[minmax(0,1fr)] gap-5 px-4 pb-6 sm:px-0 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-8"
       >
-        <div
-          class="flex gap-4 sm:compact:gap-3 h-14 sm:col-span-2 sm:row-start-2 sm:compact:col-span-1!"
-        >
-          <div class="flex-[2]">
-            ${this.renderSmallActionCard(
-              translateText("main.solo"),
-              this.openSinglePlayerModal,
-              PRIMARY_ACTION,
-            )}
-          </div>
-          ${
-            getGamesPlayed() < TUTORIAL_CARD_MAX_GAMES
-              ? html`<div class="flex-1">
-                  ${this.renderSmallActionCard(
+        <aside class="ab-command flex min-w-0 flex-col gap-4">
+          <div class="ab-kicker">${translateText("atomic_menu.kicker")}</div>
+          <h1 class="ab-hero-title" translate="no">
+            <span>ATOMIC</span><span class="ab-hero-accent">BORDERS</span>
+          </h1>
+          <p class="ab-tagline">${translateText("atomic_menu.tagline")}</p>
+
+          <button
+            class="ab-deploy ${this.inputValid ? "" : DISABLED}"
+            ?disabled=${!this.inputValid}
+            @click=${this.openSinglePlayerModal}
+          >
+            <span class="ab-deploy-icon" aria-hidden="true"
+              ><svg viewBox="0 0 12 12" class="size-4" fill="currentColor">
+                <path d="M2 1l9 5-9 5z" /></svg
+            ></span>
+            <span class="ab-deploy-label">
+              <span class="ab-deploy-main"
+                >${translateText("atomic_menu.deploy")}</span
+              >
+              <span class="ab-deploy-sub">${translateText("main.solo")}</span>
+            </span>
+          </button>
+
+          <nav
+            class="ab-cmd-list"
+            aria-label=${translateText("atomic_menu.commands")}
+          >
+            ${
+              getGamesPlayed() < TUTORIAL_CARD_MAX_GAMES
+                ? this.renderCommandRow(
+                    "01",
                     translateText("main.tutorial"),
                     this.startTutorial,
-                    TUTORIAL_ACTION,
-                  )}
-                </div>`
-              : nothing
-          }
-        </div>
-        <div
-          class="grid grid-cols-3 gap-4 sm:compact:gap-3 h-14 sm:col-span-2 sm:row-start-3"
-        >
-          ${this.renderSmallActionCard(
-            translateText("main.create"),
-            this.openHostLobby,
-            SECONDARY_ACTION,
-            undefined,
-            true,
-          )}
-          ${this.renderSmallActionCard(
-            translateText("mode_selector.ranked_title"),
-            this.openRankedMenu,
-            SECONDARY_ACTION,
-            undefined,
-            true,
-            // Ranked admits trusted accounts only. A trusted viewer gets the
-            // green open lock; anyone else meets the red locks and the trust
-            // popup inside the ranked modal. Small, so it clears the label on
-            // narrow (mobile) buttons.
-            this.viewerTrusted
-              ? trustLockIcon(true, {
-                  tooltipTitle: translateText(
-                    "mode_selector.ranked_trust_tooltip_title",
-                  ),
-                  position: "top-1 right-1",
-                  small: true,
-                })
-              : nothing,
-          )}
-          ${this.renderSmallActionCard(
-            translateText("main.join"),
-            this.openJoinLobby,
-            SECONDARY_ACTION,
-            this.hostedLobbyCount(),
-            true,
-          )}
-        </div>
+                    { highlight: true },
+                  )
+                : nothing
+            }
+            ${this.renderCommandRow(
+              "02",
+              translateText("main.create"),
+              this.openHostLobby,
+              { gated: true },
+            )}
+            ${this.renderCommandRow(
+              "03",
+              translateText("main.join"),
+              this.openJoinLobby,
+              { gated: true, badge: this.hostedLobbyCount() },
+            )}
+            ${this.renderCommandRow(
+              "04",
+              translateText("mode_selector.ranked_title"),
+              this.openRankedMenu,
+              {
+                gated: true,
+                adornment: this.viewerTrusted
+                  ? trustLockIcon(true, {
+                      tooltipTitle: translateText(
+                        "mode_selector.ranked_trust_tooltip_title",
+                      ),
+                      position: "top-1/2 -translate-y-1/2 right-10",
+                      small: true,
+                    })
+                  : nothing,
+              },
+            )}
+          </nav>
+        </aside>
 
-        <div class="min-w-0 sm:col-start-1 sm:row-start-1">
-          ${
-            ffa?.gameConfig
-              ? this.renderLobbyCard(ffa, getGameModeLabel(ffa.gameConfig))
-              : this.offlineForLobbies()
-                ? this.renderLobbiesUnavailable()
-                : this.lobbies === null
-                  ? html`<div
-                      class="flex items-center justify-center h-44 sm:h-full"
-                      role="status"
-                      aria-label=${translateText("common.loading")}
-                    >
-                      <span
-                        class="size-24 rounded-full border-[6px] border-blue-500/30 border-t-blue-500 animate-spin"
-                      ></span>
-                    </div>`
-                  : html`<div
-                      class="h-44 sm:h-full rounded-2xl bg-surface"
-                    ></div>`
-          }
-        </div>
+        <section class="ab-ops flex min-w-0 flex-col gap-3">
+          <header class="ab-panel-head">
+            <span class="ab-live-dot" aria-hidden="true"></span>
+            <span class="ab-panel-title"
+              >${translateText("atomic_menu.live_ops")}</span
+            >
+            <span class="flex-1"></span>
+            ${this.renderUpcomingHeading()}
+          </header>
 
-        <!-- Always rendered: the heading is the only way into the lobby browser. -->
-        <section
-          class="flex flex-col gap-4 sm:compact:gap-3 min-w-0 sm:grid sm:grid-rows-[auto_1fr_1fr] sm:row-start-1 sm:min-h-0 sm:[reading-flow:grid-rows] sm:col-start-2 sm:compact:row-end-3 sm:compact:grid-rows-[auto_minmax(7.5rem,1fr)_minmax(7.5rem,1fr)]"
-        >
+          <div class="ab-ops-feature min-w-0">
+            ${
+              ffa?.gameConfig
+                ? this.renderLobbyCard(ffa, getGameModeLabel(ffa.gameConfig))
+                : this.offlineForLobbies()
+                  ? this.renderLobbiesUnavailable()
+                  : this.lobbies === null
+                    ? html`<div
+                        class="flex h-56 items-center justify-center"
+                        role="status"
+                        aria-label=${translateText("common.loading")}
+                      >
+                        <span class="ab-spinner animate-spin"></span>
+                      </div>`
+                    : html`<div class="ab-empty h-56"></div>`
+            }
+          </div>
+
           ${
-            teams
-              ? html`<div class="min-w-0 sm:min-h-0 ${cardRows.teams}">
-                  ${this.renderLobbyCard(
-                    teams,
-                    getGameModeLabel(teams.gameConfig!),
-                  )}
+            teams || special
+              ? html`<div class="grid min-w-0 gap-3 sm:grid-cols-2">
+                  ${
+                    teams
+                      ? html`<div class="ab-ops-card min-w-0">
+                          ${this.renderLobbyCard(
+                            teams,
+                            getGameModeLabel(teams.gameConfig!),
+                          )}
+                        </div>`
+                      : nothing
+                  }
+                  ${
+                    special
+                      ? html`<div class="ab-ops-card min-w-0">
+                          ${this.renderLobbyCard(
+                            special,
+                            getGameModeLabel(special.gameConfig!),
+                          )}
+                        </div>`
+                      : nothing
+                  }
                 </div>`
               : nothing
           }
-          ${
-            special
-              ? html`<div class="min-w-0 sm:min-h-0 ${cardRows.special}">
-                  ${this.renderLobbyCard(
-                    special,
-                    getGameModeLabel(special.gameConfig!),
-                  )}
-                </div>`
-              : nothing
-          }
-          ${this.renderUpcomingHeading()}
         </section>
 
         ${
@@ -789,6 +787,55 @@ export class GameModeSelector extends LitElement {
   }
 
   /**
+   * One row of the command list: index, label, chevron. Multiplayer rows are
+   * `gated` -- they dim (but stay clickable, see blockedFromApiAction) when
+   * the desktop/update/backend state refuses them.
+   */
+  private renderCommandRow(
+    index: string,
+    label: string,
+    onClick: () => void,
+    opts: {
+      gated?: boolean;
+      highlight?: boolean;
+      badge?: number;
+      adornment?: TemplateResult | typeof nothing;
+    } = {},
+  ) {
+    const blocked =
+      opts.gated === true &&
+      shouldBlockMultiplayerAction(
+        this.desktopUpdateState,
+        this.desktopSessionState,
+        this.backendOutage,
+      );
+    return html`
+      <button
+        @click=${onClick}
+        ?disabled=${!this.inputValid}
+        aria-disabled=${blocked}
+        class="ab-cmd ${opts.highlight ? "ab-cmd-highlight" : ""} ${
+          !this.inputValid
+            ? DISABLED
+            : blocked
+              ? "opacity-50 cursor-not-allowed"
+              : ""
+        }"
+      >
+        <span class="ab-cmd-index" aria-hidden="true">${index}</span>
+        <span class="ab-cmd-label">${label}</span>
+        ${
+          opts.badge
+            ? html`<span class="ab-cmd-badge">${opts.badge}</span>`
+            : nothing
+        }
+        ${opts.adornment ?? nothing}
+        <span class="ab-cmd-chevron" aria-hidden="true">›</span>
+      </button>
+    `;
+  }
+
+  /**
    * Refuses an API-DEPENDENT action (Create, Ranked, Join by code) and tells
    * the player why. Returns true when the caller should stop.
    *
@@ -797,7 +844,7 @@ export class GameModeSelector extends LitElement {
    * lobby card goes through blockedFromLobbyJoin below instead.
    *
    * Deliberately NOT implemented with the `disabled` attribute the way
-   * renderSmallActionCard handles invalid input: a disabled control (and
+   * renderCommandRow handles invalid input: a disabled control (and
    * `pointer-events-none` alongside it) swallows the click, leaving nothing to
    * trigger the wiggle -- and, on the web, nothing to trigger the retry that
    * reportMultiplayerRefusal makes of it. The button stays clickable and
@@ -939,51 +986,6 @@ export class GameModeSelector extends LitElement {
 
   private hostedLobbyCount(): number {
     return this.lobbies?.games?.hosted?.length ?? 0;
-  }
-
-  private renderSmallActionCard(
-    title: string,
-    onClick: () => void,
-    bgClass: string = SECONDARY_ACTION,
-    badge?: number,
-    // Only the three multiplayer action cards (create/ranked/join) pass this;
-    // the solo card is never gated (see openSinglePlayerModal) and must never
-    // show as disabled here.
-    gated: boolean = false,
-    adornment: TemplateResult | typeof nothing = nothing,
-  ) {
-    const blocked =
-      gated &&
-      shouldBlockMultiplayerAction(
-        this.desktopUpdateState,
-        this.desktopSessionState,
-        this.backendOutage,
-      );
-    return html`
-      <button
-        @click=${onClick}
-        ?disabled=${!this.inputValid}
-        aria-disabled=${blocked}
-        class="relative flex items-center justify-center w-full h-full rounded-lg ${bgClass} transition-all duration-200 text-sm lg:text-base font-medium text-white uppercase tracking-wider text-center ${
-          !this.inputValid
-            ? DISABLED
-            : blocked
-              ? "opacity-50 cursor-not-allowed"
-              : ""
-        }"
-      >
-        ${title}
-        ${
-          badge
-            ? html`<span
-                class="absolute -top-2 -right-2 min-w-[1.375rem] h-[1.375rem] px-1.5 flex items-center justify-center rounded-full bg-red-500 text-white text-xs font-bold tracking-normal"
-                >${badge}</span
-              >`
-            : nothing
-        }
-        ${adornment}
-      </button>
-    `;
   }
 
   private renderLobbyCard(

@@ -109,7 +109,7 @@ export async function renderHtmlContent(
       cdnBase,
     ),
     gameplayScreenshotUrl: buildAssetUrl(
-      "images/KeyArt.jpg",
+      "images/KeyArt.png",
       assetManifest,
       cdnBase,
     ),
@@ -119,11 +119,11 @@ export async function renderHtmlContent(
       cdnBase,
     ),
     desktopLogoImageUrl: buildAssetUrl(
-      "images/OpenFront.png",
+      "images/AtomicBorders.png",
       assetManifest,
       cdnBase,
     ),
-    mobileLogoImageUrl: buildAssetUrl("images/OF.png", assetManifest, cdnBase),
+    mobileLogoImageUrl: buildAssetUrl("images/AB.png", assetManifest, cdnBase),
   });
 }
 

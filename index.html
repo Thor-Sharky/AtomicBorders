@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title data-i18n="main.title">OpenFront (ALPHA)</title>
+    <title data-i18n="main.title">Atomic Borders</title>
     <link rel="manifest" href="<%- manifestHref %>" />
     <link rel="icon" type="image/svg+xml" href="<%- faviconHref %>" />
     <!-- iOS takes its home-screen icon from here before the manifest. Without it
@@ -152,7 +152,10 @@
 
     <!-- Open Graph -->
     <meta property="og:url" content="https://openfront.io/" />
-    <meta property="og:title" content="OpenFront - Battle Royale" />
+    <meta
+      property="og:title"
+      content="Atomic Borders - Nuclear Territory Strategy"
+    />
     <meta
       property="og:description"
       content="Conquer the world in this multiplayer battle royale! Expand your nation, eliminate opponents, and dominate the map in this fast-paced IO game."
@@ -165,8 +168,8 @@
       {
         "@context": "https://schema.org",
         "@type": "VideoGame",
-        "name": "OpenFront",
-        "alternateName": "OpenFront.io",
+        "name": "Atomic Borders",
+        "alternateName": "Atomic Borders",
         "url": "https://openfront.io/",
         "image": "<%- gameplayScreenshotUrl %>",
         "description": "Conquer the world in this multiplayer battle royale! Expand your nation, eliminate opponents, and dominate the map in this fast-paced IO game.",
@@ -383,21 +386,20 @@
       })();
     </script>
     <div id="hex-grid" class="fixed inset-0 -z-50 pointer-events-none">
-      <div
-        id="background-layer"
-        class="absolute inset-x-0 top-0 -bottom-[4cm] bg-cover opacity-30 [filter:brightness(1.0)] dark:[filter:sepia(0.2)_saturate(1.2)_hue-rotate(180deg)_brightness(0.9)]"
-        style="
-          background-image: var(--background-image-url);
-          background-position: center top;
-        "
-      ></div>
+      <!-- Atomic Borders backdrop: grid, radar sweep and scanlines, all CSS
+           (main-menu.css). -->
+      <div id="background-layer" class="ab-backdrop absolute inset-0">
+        <div class="ab-backdrop-grid"></div>
+        <div class="ab-backdrop-radar"></div>
+        <div class="ab-backdrop-scan"></div>
+      </div>
       <div
         class="absolute inset-0 bg-center bg-no-repeat bg-contain hidden lg:block"
         style="background-image: var(--desktop-logo-image-url); opacity: 0.5"
       ></div>
       <div
         class="absolute inset-0 bg-center bg-no-repeat bg-contain lg:hidden"
-        style="background-image: var(--mobile-logo-image-url); opacity: 0.5"
+        style="background-image: var(--mobile-logo-image-url); opacity: 0.06"
       ></div>
     </div>
 

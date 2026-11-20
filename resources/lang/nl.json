@@ -689,7 +689,7 @@
     "retry": "Probeer opnieuw",
     "starting_link": "Account koppelen Starten…",
     "ticket_unavailable": "Kan account koppelen nu niet starten. Je kunt het opnieuw proberen, of doorgaan met het spel.",
-    "title": "OpenFront - Account setup"
+    "title": "Atomic Borders"
   },
   "desktop_presence": {
     "in_game": "In het spel",
@@ -1443,7 +1443,7 @@
     "solo": "Solo",
     "store": "Winkel",
     "terms_of_service": "Servicevoorwaarden",
-    "title": "OpenFront (ALFA)",
+    "title": "Atomic Borders",
     "troubleshooting": "Problemen oplossen",
     "tutorial": "Tutorial",
     "user_avatar_alt": "Avatar van {username}",

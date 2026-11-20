@@ -689,7 +689,7 @@
     "retry": "再試行",
     "starting_link": "アカウントを連携しています…",
     "ticket_unavailable": "現在、アカウントを連携できません。もう一度お試しいただくか、そのまま試合を続行してください。",
-    "title": "OpenFront ー アカウント設定"
+    "title": "Atomic Borders"
   },
   "desktop_presence": {
     "in_game": "試合中",
@@ -1443,7 +1443,7 @@
     "solo": "ソロ",
     "store": "ストア",
     "terms_of_service": "利用規約",
-    "title": "OpenFront (ALPHA)",
+    "title": "Atomic Borders",
     "troubleshooting": "トラブルシューティング",
     "tutorial": "チュートリアル",
     "user_avatar_alt": "{username}のアバター",
@@ -1625,7 +1625,7 @@
     "dismiss": "解除",
     "error": "保存できませんでした。もう一度お試しください。",
     "no": "今はしない",
-    "title": "OpenFrontの最新情報を受け取りますか？",
+    "title": "Atomic Borders",
     "yes": "はい"
   },
   "matchmaking_modal": {
@@ -2076,7 +2076,7 @@
   "purchase_nudge": {
     "body": "OpenFrontを楽しんでいただけて何よりです！もしよかったらご支援をいただけると嬉しいです。何か1つでも購入すると、以降は広告なしでゲームをお楽しみできます。",
     "close": "閉じる",
-    "title": "OpenFrontを楽しんでいますか？",
+    "title": "Atomic Borders",
     "visit_store": "ストアを見る"
   },
   "radial_menu": {
