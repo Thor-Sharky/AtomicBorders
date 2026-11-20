@@ -47,6 +47,48 @@ const MIGRATIONS: string[] = [
     created_at    INTEGER NOT NULL
   );
   `,
+  // 2: archived games, per-player results, ratings
+  `
+  CREATE TABLE games (
+    game_id        TEXT PRIMARY KEY,
+    start_ms       INTEGER NOT NULL,
+    end_ms         INTEGER NOT NULL,
+    duration_s     INTEGER NOT NULL,
+    map            TEXT NOT NULL,
+    mode           TEXT NOT NULL,          -- GameMode value
+    type           TEXT NOT NULL,          -- GameType value
+    difficulty     TEXT NOT NULL,
+    player_teams   TEXT,                   -- team count / "Humans Vs Nations"
+    ranked_type    TEXT NOT NULL DEFAULT '',
+    total_players  INTEGER NOT NULL,
+    has_winner     INTEGER NOT NULL,
+    record         BLOB NOT NULL           -- gzip(JSON GameRecord)
+  );
+  CREATE INDEX games_start ON games(start_ms);
+  CREATE TABLE game_players (
+    game_id    TEXT NOT NULL REFERENCES games(game_id) ON DELETE CASCADE,
+    client_id  TEXT NOT NULL,
+    player_id  TEXT REFERENCES players(id) ON DELETE SET NULL,
+    username   TEXT NOT NULL,
+    clan_tag   TEXT,
+    team       TEXT,
+    won        INTEGER NOT NULL,
+    PRIMARY KEY (game_id, client_id)
+  );
+  CREATE INDEX game_players_player ON game_players(player_id);
+  CREATE INDEX game_players_clan ON game_players(clan_tag);
+  CREATE TABLE ratings (
+    player_id  TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    ladder     TEXT NOT NULL,              -- RankedType value: 1v1 | 2v2 | ffa
+    rating     REAL NOT NULL,
+    peak       REAL NOT NULL,
+    games      INTEGER NOT NULL,
+    wins       INTEGER NOT NULL,
+    losses     INTEGER NOT NULL,
+    PRIMARY KEY (player_id, ladder)
+  );
+  CREATE INDEX ratings_ladder ON ratings(ladder, rating DESC);
+  `,
 ];
 
 export function openDb(file: string): Db {

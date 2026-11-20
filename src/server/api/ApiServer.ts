@@ -14,26 +14,40 @@ import { Accounts } from "./accounts";
 import { registerAuthRoutes } from "./auth";
 import { type ApiConfig, type ApiContext, cors } from "./context";
 import { type Db, openDb } from "./db";
+import { registerGameRoutes } from "./games";
 import { loadSigningKeys, type SigningKeys } from "./keys";
 import { registerUserRoutes } from "./users";
+
+const BIG_BODY_PATHS = /^\/(game\/[^/]+|archive_singleplayer_game)$/;
 
 export function createApiApp(
   db: Db,
   keys: SigningKeys,
   config: ApiConfig,
 ): { app: Express; ctx: ApiContext } {
-  const ctx: ApiContext = { db, keys, accounts: new Accounts(db), config };
+  const ctx: ApiContext = {
+    db,
+    keys,
+    accounts: new Accounts(db),
+    config,
+    userExtras: [],
+  };
   const app = express();
   app.disable("x-powered-by");
   app.set("trust proxy", true);
   app.use(cors(ctx));
-  app.use(express.json({ limit: "1mb" }));
+  // Game records can be large; their routes parse with a bigger limit.
+  const smallJson = express.json({ limit: "1mb" });
+  app.use((req, res, next) =>
+    BIG_BODY_PATHS.test(req.path) ? next() : smallJson(req, res, next),
+  );
 
   app.get("/health", (_req, res) => {
     res.json({ ok: true });
   });
   registerAuthRoutes(app, ctx);
   registerUserRoutes(app, ctx);
+  registerGameRoutes(app, ctx);
 
   // Everything else OpenFront's API offered (store, cosmetics, news, Steam...)
   // doesn't exist here: answer fast so the client shows "unavailable".

@@ -22,6 +22,8 @@ export interface ApiContext {
   keys: SigningKeys;
   accounts: Accounts;
   config: ApiConfig;
+  /** Fields later modules add to /users/@me `player` (ratings, clans). */
+  userExtras: ((player: PlayerRow) => Record<string, unknown>)[];
 }
 
 export const REFRESH_COOKIE = "ab_refresh";

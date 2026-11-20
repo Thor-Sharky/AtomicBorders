@@ -11,15 +11,6 @@ import type { Express, Request, Response } from "express";
 import type { PlayerRow } from "./accounts";
 import { type ApiContext, requirePlayer } from "./context";
 
-/** Extra fields later phases add to the player object (ratings, clans). */
-export type PlayerExtras = (player: PlayerRow) => Record<string, unknown>;
-
-const extras: PlayerExtras[] = [];
-
-export function addPlayerExtras(fn: PlayerExtras) {
-  extras.push(fn);
-}
-
 export function buildUserMe(ctx: ApiContext, player: PlayerRow) {
   const user: Record<string, unknown> = {};
   for (const id of ctx.accounts.identities(player.id)) {
@@ -42,7 +33,7 @@ export function buildUserMe(ctx: ApiContext, player: PlayerRow) {
     clans: [],
     clanRequests: [],
   };
-  for (const fn of extras) Object.assign(playerObj, fn(player));
+  for (const fn of ctx.userExtras) Object.assign(playerObj, fn(player));
   return {
     user,
     ban:
