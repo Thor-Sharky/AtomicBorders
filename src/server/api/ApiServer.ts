@@ -17,6 +17,7 @@ import { type ApiConfig, type ApiContext, cors } from "./context";
 import { type Db, openDb } from "./db";
 import { registerGameRoutes } from "./games";
 import { loadSigningKeys, type SigningKeys } from "./keys";
+import { Matchmaker } from "./matchmaking";
 import { registerUserRoutes } from "./users";
 
 const BIG_BODY_PATHS = /^\/(game\/[^/]+|archive_singleplayer_game)$/;
@@ -25,7 +26,7 @@ export function createApiApp(
   db: Db,
   keys: SigningKeys,
   config: ApiConfig,
-): { app: Express; ctx: ApiContext } {
+): { app: Express; ctx: ApiContext; matchmaker: Matchmaker } {
   const ctx: ApiContext = {
     db,
     keys,
@@ -51,6 +52,8 @@ export function createApiApp(
   registerUserRoutes(app, ctx);
   registerGameRoutes(app, ctx);
   registerClanRoutes(app, ctx);
+  const matchmaker = new Matchmaker(ctx);
+  matchmaker.register(app);
 
   // An empty cosmetics catalog: no store here, but game servers need a valid
   // catalog to switch on clan-tag checks and country flags (PrivilegeRefresher).
@@ -63,7 +66,7 @@ export function createApiApp(
   app.use((_req, res) => {
     res.status(404).json({ error: "not available in Atomic Borders" });
   });
-  return { app, ctx };
+  return { app, ctx, matchmaker };
 }
 
 /** Origins allowed to use the API: the site and its subdomains, or localhost in dev. */
@@ -96,13 +99,14 @@ export async function startApiServer(opts: {
   const dataDir = path.resolve(process.env.DATA_DIR ?? "data");
   const db = openDb(path.join(dataDir, "atomic.db"));
   const keys = await loadSigningKeys(dataDir);
-  const { app } = createApiApp(db, keys, {
+  const { app, matchmaker } = createApiApp(db, keys, {
     issuer: opts.issuer,
     audience: opts.audience,
     apiKey: process.env.API_KEY ?? "",
     isAllowedOrigin: originMatcher(opts.audience),
   });
   const server = http.createServer(app);
+  matchmaker.attach(server);
   return new Promise((resolve) => {
     server.once("error", (e) => {
       console.error(`[api] could not listen on ${port}:`, e);

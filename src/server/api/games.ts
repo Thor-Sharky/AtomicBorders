@@ -255,7 +255,12 @@ export function registerGameRoutes(app: Express, ctx: ApiContext) {
     (req: Request, res: Response) => {
       const parsed = GameRecordSchema.safeParse(req.body);
       if (!parsed.success || parsed.data.info.gameID !== req.params.id) {
-        res.status(400).json({ error: "invalid game record" });
+        res.status(400).json({
+          error: "invalid game record",
+          details: parsed.success
+            ? "gameID does not match the URL"
+            : z.prettifyError(parsed.error),
+        });
         return;
       }
       const stored = ingestGame(ctx, parsed.data, { rated: true });
