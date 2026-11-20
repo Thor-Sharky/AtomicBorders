@@ -4,6 +4,7 @@ import {
   type ClanBrowseFilter,
   type ClanBrowseResponse,
   type ClanBrowseSort,
+  createClan,
   fetchClans,
 } from "../../ClanApi";
 import { translateText } from "../../Utils";
@@ -28,7 +29,6 @@ const browseSortOptions: { value: ClanBrowseSort; labelKey: string }[] = [
   { value: "winScore", labelKey: "clan_modal.sort_browse_win_score" },
   { value: "winScoreLow", labelKey: "clan_modal.sort_browse_win_score_low" },
   { value: "createdAt", labelKey: "clan_modal.sort_browse_oldest" },
-  { value: "softBalance", labelKey: "clan_modal.sort_browse_richest" },
   { value: "name", labelKey: "clan_modal.sort_browse_name" },
 ];
 
@@ -58,6 +58,13 @@ export class ClanBrowseView extends LitElement {
   @state() private browseFilter: ClanBrowseFilter = "all";
   @state() private loading = false;
   @state() private errorMsg = "";
+  @state() private showCreate = false;
+  @state() private creating = false;
+  @state() private createError = "";
+  @state() private newTag = "";
+  @state() private newName = "";
+  @state() private newDescription = "";
+  @state() private newOpen = true;
   private searchDebounce: ReturnType<typeof setTimeout> | null = null;
   private pinnedBucket: number | undefined = undefined;
   private asyncGeneration = 0;
@@ -151,6 +158,118 @@ export class ClanBrowseView extends LitElement {
     super.disconnectedCallback();
   }
 
+  private async submitCreate(e: Event) {
+    e.preventDefault();
+    if (this.creating) return;
+    this.creating = true;
+    this.createError = "";
+    const result = await createClan({
+      tag: this.newTag.trim(),
+      name: this.newName.trim(),
+      description: this.newDescription.trim(),
+      isOpen: this.newOpen,
+    });
+    this.creating = false;
+    if ("error" in result) {
+      this.createError = translateText(result.error);
+      return;
+    }
+    this.showCreate = false;
+    this.newTag = this.newName = this.newDescription = "";
+    this.dispatchEvent(
+      new CustomEvent("clan-created", {
+        detail: { tag: result.tag },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
+  // Atomic Borders addition: OpenFront has no in-game way to found a clan.
+  private renderCreateClan() {
+    const field =
+      "w-full px-3 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/25 focus:outline-none focus:ring-2 focus:ring-malibu-blue/50 text-sm";
+    if (!this.showCreate) {
+      return html`<button
+        type="button"
+        data-create-clan
+        class="w-full py-3 rounded-xl border border-dashed border-white/20 text-white/70 hover:text-white hover:border-white/40 hover:bg-white/5 text-sm font-bold uppercase tracking-wider transition-colors"
+        @click=${() => (this.showCreate = true)}
+      >
+        + ${translateText("clan_modal.create_clan")}
+      </button>`;
+    }
+    return html`<form
+      class="space-y-3 p-4 rounded-xl border border-white/10 bg-white/5"
+      @submit=${(e: Event) => this.submitCreate(e)}
+    >
+      <div class="grid grid-cols-[6rem_1fr] gap-2">
+        <input
+          class="${field} uppercase"
+          maxlength="5"
+          required
+          pattern="[A-Za-z0-9]{2,5}"
+          .value=${this.newTag}
+          placeholder=${translateText("clan_modal.create_tag")}
+          aria-label=${translateText("clan_modal.create_tag")}
+          @input=${(e: Event) =>
+            (this.newTag = (e.target as HTMLInputElement).value)}
+        />
+        <input
+          class=${field}
+          maxlength="35"
+          minlength="2"
+          required
+          .value=${this.newName}
+          placeholder=${translateText("clan_modal.create_name")}
+          aria-label=${translateText("clan_modal.create_name")}
+          @input=${(e: Event) =>
+            (this.newName = (e.target as HTMLInputElement).value)}
+        />
+      </div>
+      <textarea
+        class="${field} resize-none"
+        rows="2"
+        maxlength="200"
+        .value=${this.newDescription}
+        placeholder=${translateText("clan_modal.create_description")}
+        aria-label=${translateText("clan_modal.create_description")}
+        @input=${(e: Event) =>
+          (this.newDescription = (e.target as HTMLTextAreaElement).value)}
+      ></textarea>
+      <label class="flex items-center gap-2 text-sm text-white/70">
+        <input
+          type="checkbox"
+          .checked=${this.newOpen}
+          @change=${(e: Event) =>
+            (this.newOpen = (e.target as HTMLInputElement).checked)}
+        />
+        ${translateText("clan_modal.create_open")}
+      </label>
+      ${
+        this.createError
+          ? html`<p class="text-sm text-red-400">${this.createError}</p>`
+          : ""
+      }
+      <div class="flex gap-2 justify-end">
+        <button
+          type="button"
+          class="px-4 py-2 rounded-xl text-white/60 hover:text-white text-sm"
+          @click=${() => (this.showCreate = false)}
+        >
+          ${translateText("common.cancel")}
+        </button>
+        <button
+          type="submit"
+          ?disabled=${this.creating}
+          class="px-5 py-2 rounded-xl bg-malibu-blue hover:bg-aquarius text-white text-sm font-bold uppercase tracking-wider disabled:opacity-50"
+        >
+          ${translateText("clan_modal.create_submit")}
+        </button>
+      </div>
+    </form>`;
+  }
+
   render() {
     if (this.loading && !this.browseData) return renderLoadingSpinner();
 
@@ -175,6 +294,7 @@ export class ClanBrowseView extends LitElement {
 
     return html`
       <div class="space-y-4">
+        ${this.renderCreateClan()}
         <div class="flex flex-col sm:flex-row gap-2">
           <div class="relative flex-1">
             <input

@@ -155,7 +155,8 @@ export class ClanModal extends BaseModal {
     return {
       tabs: this.onListView
         ? [
-            { key: "map", label: translateText("clan_modal.tab_map_alpha") },
+            // The clan territory map and the donations ledger run on
+            // OpenFront services Atomic Borders doesn't have.
             { key: "my-clans", label: translateText("clan_modal.my_clans") },
             { key: "browse", label: translateText("clan_modal.browse") },
           ]
@@ -172,10 +173,6 @@ export class ClanModal extends BaseModal {
               {
                 key: "game-history",
                 label: translateText("clan_modal.tab_game_history"),
-              },
-              {
-                key: "donations",
-                label: translateText("clan_modal.tab_donations"),
               },
             ]
           : [],
@@ -669,6 +666,15 @@ export class ClanModal extends BaseModal {
               @clan-select=${(
                 e: CustomEvent<{ tag: string; source?: "boosted" }>,
               ) => this.openDetail(e.detail.tag, e.detail.source)}
+              @clan-created=${(e: CustomEvent<{ tag: string }>) => {
+                this.myClanRoles = new Map([
+                  ...this.myClanRoles,
+                  [e.detail.tag, "leader" as ClanRole],
+                ]);
+                this.browseCache = null;
+                void this.loadMyClans();
+                this.openDetail(e.detail.tag);
+              }}
             ></clan-browse-view>`
       }
     `;

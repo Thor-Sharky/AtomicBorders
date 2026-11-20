@@ -321,6 +321,7 @@ export function registerGameRoutes(app: Express, ctx: ApiContext) {
       clans: [],
       displayClanTag: null,
       ffaRating: null,
+      ...Object.assign({}, ...ctx.profileExtras.map((fn) => fn(player))),
     });
   });
 

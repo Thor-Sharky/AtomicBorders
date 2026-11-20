@@ -12,6 +12,7 @@ import http from "node:http";
 import path from "node:path";
 import { Accounts } from "./accounts";
 import { registerAuthRoutes } from "./auth";
+import { registerClanRoutes } from "./clans";
 import { type ApiConfig, type ApiContext, cors } from "./context";
 import { type Db, openDb } from "./db";
 import { registerGameRoutes } from "./games";
@@ -31,6 +32,7 @@ export function createApiApp(
     accounts: new Accounts(db),
     config,
     userExtras: [],
+    profileExtras: [],
   };
   const app = express();
   app.disable("x-powered-by");
@@ -48,6 +50,13 @@ export function createApiApp(
   registerAuthRoutes(app, ctx);
   registerUserRoutes(app, ctx);
   registerGameRoutes(app, ctx);
+  registerClanRoutes(app, ctx);
+
+  // An empty cosmetics catalog: no store here, but game servers need a valid
+  // catalog to switch on clan-tag checks and country flags (PrivilegeRefresher).
+  app.get("/cosmetics.json", (_req, res) => {
+    res.json({ patterns: {}, flags: {} });
+  });
 
   // Everything else OpenFront's API offered (store, cosmetics, news, Steam...)
   // doesn't exist here: answer fast so the client shows "unavailable".

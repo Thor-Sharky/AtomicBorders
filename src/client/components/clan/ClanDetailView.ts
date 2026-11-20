@@ -40,6 +40,10 @@ import {
 } from "./ClanShared";
 import { ClanStatsBreakdown } from "./ClanStatsBreakdown";
 
+// Clan funds, donations and boosts are OpenFront paid currency features; the
+// Atomic Borders API doesn't offer them, so their controls stay hidden.
+const CLAN_CURRENCY = false;
+
 @customElement("clan-detail-view")
 export class ClanDetailView extends LitElement {
   createRenderRoot() {
@@ -961,7 +965,7 @@ export class ClanDetailView extends LitElement {
         </button>
       `);
     }
-    if (isMember) {
+    if (isMember && CLAN_CURRENCY) {
       buttons.push(html`
         <button
           @click=${() => (this.donateOpen = true)}
@@ -971,7 +975,7 @@ export class ClanDetailView extends LitElement {
         </button>
       `);
     }
-    if (isLeader || isOfficer) {
+    if ((isLeader || isOfficer) && CLAN_CURRENCY) {
       buttons.push(html`
         <button
           data-action="boost"
@@ -981,6 +985,8 @@ export class ClanDetailView extends LitElement {
           ${translateText("clan_modal.boost")}
         </button>
       `);
+    }
+    if (isLeader || isOfficer) {
       buttons.push(html`
         <button
           @click=${() =>

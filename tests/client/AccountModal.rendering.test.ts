@@ -511,15 +511,18 @@ describe("AccountModal — rendering", () => {
   // Pins main.login_steam POSITIVELY. The desktop-shell test above asserts its
   // absence against a translation-key literal, which decays into a no-op if
   // the key is ever renamed; this one breaks loudly instead.
-  it("offers Sign in with Steam on the logged-out web login screen", async () => {
+  // Atomic Borders: Discord and Google only (no Steam or email sign-in).
+  it("offers Discord and Google but not Steam on the logged-out login screen", async () => {
     (modal as unknown as { userMeResponse: unknown }).userMeResponse = null;
     (modal as unknown as { isLoadingUser: boolean }).isLoadingUser = false;
     modal.requestUpdate();
     await modal.updateComplete;
 
     const text = modal.textContent ?? "";
-    expect(text).toContain("main.login_steam");
+    expect(text).not.toContain("main.login_steam");
+    expect(text).not.toContain("account_modal.get_magic_link");
     expect(text).toContain("main.login_discord");
+    expect(text).toContain("main.login_google");
   });
 
   // Web sign-in never creates an account, so this is an ordinary outcome and

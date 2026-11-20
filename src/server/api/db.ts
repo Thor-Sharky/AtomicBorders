@@ -89,6 +89,39 @@ const MIGRATIONS: string[] = [
   );
   CREATE INDEX ratings_ladder ON ratings(ladder, rating DESC);
   `,
+  // 3: clans
+  `
+  CREATE TABLE clans (
+    tag          TEXT PRIMARY KEY,         -- uppercase, 2-5 [A-Z0-9]
+    name         TEXT NOT NULL,
+    description  TEXT NOT NULL DEFAULT '',
+    discord_url  TEXT,
+    is_open      INTEGER NOT NULL,
+    created_at   INTEGER NOT NULL
+  );
+  CREATE TABLE clan_members (
+    tag        TEXT NOT NULL REFERENCES clans(tag) ON DELETE CASCADE,
+    player_id  TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    role       TEXT NOT NULL,              -- leader | officer | member
+    joined_at  INTEGER NOT NULL,
+    PRIMARY KEY (tag, player_id)
+  );
+  CREATE INDEX clan_members_player ON clan_members(player_id);
+  CREATE TABLE clan_requests (
+    tag         TEXT NOT NULL REFERENCES clans(tag) ON DELETE CASCADE,
+    player_id   TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    created_at  INTEGER NOT NULL,
+    PRIMARY KEY (tag, player_id)
+  );
+  CREATE TABLE clan_bans (
+    tag         TEXT NOT NULL REFERENCES clans(tag) ON DELETE CASCADE,
+    player_id   TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    banned_by   TEXT NOT NULL,
+    reason      TEXT,
+    created_at  INTEGER NOT NULL,
+    PRIMARY KEY (tag, player_id)
+  );
+  `,
 ];
 
 export function openDb(file: string): Db {

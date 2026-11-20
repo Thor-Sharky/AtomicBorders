@@ -46,6 +46,9 @@ import type { ClanInfo } from "../../../src/client/ClanApi";
 import { fetchClanDetail } from "../../../src/client/ClanApi";
 import { ClanModal } from "../../../src/client/ClanModal";
 
+// Hidden in Atomic Borders: the clan map and donations ledger run on
+// OpenFront services this fork does not have.
+
 const asMock = (fn: unknown) => fn as ReturnType<typeof vi.fn>;
 
 describe("ClanModal — player-profile handoff", () => {
@@ -246,7 +249,7 @@ describe("ClanModal — player-profile handoff", () => {
     expect(getElState(modal, "activeTab")).toBe("game-history");
   });
 
-  it("offers the Map tab first on the clan list, landing on My Clans", async () => {
+  it.skip("offers the Map tab first on the clan list, landing on My Clans", async () => {
     modal.open({});
     await flushAsync(modal);
 
@@ -260,7 +263,7 @@ describe("ClanModal — player-profile handoff", () => {
     expect(modal.querySelector("clan-map-view")).toBeNull();
   });
 
-  it("mounts the map only while open on the Map tab", async () => {
+  it.skip("mounts the map only while open on the Map tab", async () => {
     stubGameEnv("dev");
     // The map is a full-screen page on <body>. Closed: nothing is framed, so the map page isn't polling in the background.
     expect(document.querySelector("clan-map-view")).toBeNull();
@@ -276,7 +279,7 @@ describe("ClanModal — player-profile handoff", () => {
     expect(getElState(modal, "activeTab")).toBe("my-clans");
   });
 
-  it("offers a Donations tab on the clan detail", async () => {
+  it.skip("offers a Donations tab on the clan detail", async () => {
     modal.open({ clan: "AAA" });
     await waitForSubComponent(modal, "clan-detail-view");
 
@@ -288,7 +291,7 @@ describe("ClanModal — player-profile handoff", () => {
     expect(tabs).toEqual(["overview", "members", "game-history", "donations"]);
   });
 
-  it("returns a donor's profile to the clan's Donations tab", async () => {
+  it.skip("returns a donor's profile to the clan's Donations tab", async () => {
     modal.open({ clan: "AAA" });
     await waitForSubComponent(modal, "clan-detail-view");
     modal.setActiveTab("donations");

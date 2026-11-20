@@ -271,6 +271,6 @@ describe("CORS", () => {
 
 describe("unimplemented endpoints", () => {
   it("answer 404 fast", async () => {
-    expect((await fetch(`${base}/cosmetics.json`)).status).toBe(404);
+    expect((await fetch(`${base}/news.json`)).status).toBe(404);
   });
 });

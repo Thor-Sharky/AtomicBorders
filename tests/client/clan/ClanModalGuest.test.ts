@@ -29,6 +29,9 @@ import { getUserMe } from "../../../src/client/Api";
 import { joinClan } from "../../../src/client/ClanApi";
 import { ClanModal } from "../../../src/client/ClanModal";
 
+// Hidden in Atomic Borders: the clan map and donations ledger run on
+// OpenFront services this fork does not have.
+
 const asMock = (fn: unknown) => fn as ReturnType<typeof vi.fn>;
 
 // Signed out: the map and Browse are public, My Clans asks to sign in, and
@@ -81,7 +84,7 @@ describe("ClanModal — signed out", () => {
     expect(showPage).toHaveBeenCalledWith("page-account");
   });
 
-  it("lets a signed-out viewer deep-link to the map", async () => {
+  it.skip("lets a signed-out viewer deep-link to the map", async () => {
     stubGameEnv("dev");
     // The router's sequence for `#modal=clan&tab=map`: showPage() opens the
     // inline modal without args, then the URL's args arrive.
@@ -101,7 +104,7 @@ describe("ClanModal — signed out", () => {
     );
   });
 
-  it("opens the map as a full-screen page with a way back to the clans", async () => {
+  it.skip("opens the map as a full-screen page with a way back to the clans", async () => {
     modal.open({ tab: "map" });
     await flushAsync(modal);
 
@@ -125,7 +128,7 @@ describe("ClanModal — signed out", () => {
     expect(document.querySelector("[data-clan-map-page]")).toBeNull();
   });
 
-  it("goes back from the map to the clan list it was opened from", async () => {
+  it.skip("goes back from the map to the clan list it was opened from", async () => {
     modal.open({ tab: "browse" });
     await flushAsync(modal);
     modal.setActiveTab("map");
@@ -137,7 +140,7 @@ describe("ClanModal — signed out", () => {
     expect(getElState(modal, "activeTab")).toBe("browse");
   });
 
-  it("never goes back from the map to the map, so a player can't get stuck there", async () => {
+  it.skip("never goes back from the map to the map, so a player can't get stuck there", async () => {
     // A clan opened while the map is showing (a deep link or a profile
     // handoff): the clan's Back returns to the map, and the map's Back must
     // then leave it.

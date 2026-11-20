@@ -24,6 +24,8 @@ export interface ApiContext {
   config: ApiConfig;
   /** Fields later modules add to /users/@me `player` (ratings, clans). */
   userExtras: ((player: PlayerRow) => Record<string, unknown>)[];
+  /** Fields later modules add to the public player profile (clans). */
+  profileExtras: ((player: PlayerRow) => Record<string, unknown>)[];
 }
 
 export const REFRESH_COOKIE = "ab_refresh";

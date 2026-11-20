@@ -372,6 +372,41 @@ export async function joinClan(
   }
 }
 
+/**
+ * Founds a clan with the caller as leader (Atomic Borders API, POST /clans).
+ * Errors come back as translation keys.
+ */
+export async function createClan(input: {
+  tag: string;
+  name: string;
+  description: string;
+  isOpen: boolean;
+}): Promise<ClanInfo | { error: string }> {
+  try {
+    const res = await clanFetch("/clans", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    if (res.status === 403) return { error: "clan_modal.create_error_sign_in" };
+    if (res.status === 400) return { error: "clan_modal.create_error_invalid" };
+    if (res.status === 409) {
+      const body: { code?: unknown } = await res.json().catch(() => ({}));
+      if (body.code === "taken")
+        return { error: "clan_modal.create_error_taken" };
+      if (body.code === "already_leader") {
+        return { error: "clan_modal.create_error_already_leader" };
+      }
+      return { error: "clan_modal.create_error_too_many" };
+    }
+    if (!res.ok) return { error: "clan_modal.error_network" };
+    const parsed = ClanInfoSchema.safeParse(await res.json());
+    return parsed.success ? parsed.data : { error: "clan_modal.error_network" };
+  } catch {
+    return { error: "clan_modal.error_network" };
+  }
+}
+
 export async function leaveClan(
   tag: string,
 ): Promise<true | { error: string }> {

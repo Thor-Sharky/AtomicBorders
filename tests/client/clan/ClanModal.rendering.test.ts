@@ -208,7 +208,6 @@ describe("ClanModal — rendering", () => {
         "winScore",
         "winScoreLow",
         "createdAt",
-        "softBalance",
         "name",
       ]);
 
@@ -330,7 +329,6 @@ describe("ClanModal — rendering", () => {
         "winScore",
         "winScoreLow",
         "createdAt",
-        "softBalance",
         "name",
       ]);
       expect(select.value).toBe("name");

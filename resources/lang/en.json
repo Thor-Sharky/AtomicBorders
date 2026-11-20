@@ -181,6 +181,16 @@
   "account_settings_modal": {
     "title": "Account Settings"
   },
+  "atomic_menu": {
+    "based_on": "Based on OpenFront",
+    "callsign": "Callsign",
+    "commands": "Commands",
+    "deploy": "Deploy",
+    "kicker": "// Command console",
+    "live_ops": "Live operations",
+    "source": "Source code",
+    "tagline": "Claim the map. Build the silos. Hold the line."
+  },
   "ban_notice": {
     "appeal_prompt": "Think this is a mistake or want to appeal?",
     "category": {
@@ -679,6 +689,17 @@
     "confirm_disband": "Are you sure you want to disband [{tag}] {name}? This cannot be undone.",
     "confirm_kick": "Are you sure you want to kick this member?",
     "confirm_transfer": "Transfer leadership to {name}",
+    "create_clan": "Create a clan",
+    "create_description": "Description (optional)",
+    "create_error_already_leader": "You already lead a clan.",
+    "create_error_invalid": "Use a 2-5 letter or number tag and a name of 2-35 characters.",
+    "create_error_sign_in": "Sign in with Discord or Google to create a clan.",
+    "create_error_taken": "That tag is already taken.",
+    "create_error_too_many": "You are already in the maximum number of clans.",
+    "create_name": "Clan name",
+    "create_open": "Anyone can join (otherwise players request to join)",
+    "create_submit": "Create clan",
+    "create_tag": "Tag",
     "danger_zone": "Danger Zone",
     "demote": "Demote",
     "deny": "Deny",
@@ -874,7 +895,6 @@
     "sort_browse_name": "A–Z",
     "sort_browse_oldest": "Oldest",
     "sort_browse_random": "Random",
-    "sort_browse_richest": "Richest",
     "sort_browse_win_score": "Highest win score",
     "sort_browse_win_score_low": "Lowest win score",
     "sort_by": "Sort by",
@@ -901,9 +921,7 @@
     "stats_team_count": "{count} Teams",
     "stats_total": "Total",
     "status": "Status",
-    "tab_donations": "Donations",
     "tab_game_history": "Game History",
-    "tab_map_alpha": "Map (ALPHA)",
     "tab_overview": "Overview",
     "title": "Clans",
     "transfer_leadership": "Transfer Leadership",
@@ -1867,7 +1885,6 @@
     "copyright": "Atomic Borders · based on OpenFront · © OpenFront and Contributors",
     "create": "Create Lobby",
     "discord_avatar_alt": "Discord profile avatar",
-    "github": "GitHub",
     "go_to_troubleshooting": "Go to our troubleshooting page",
     "help": "Help",
     "inventory": "Inventory",
@@ -1889,8 +1906,7 @@
     "title": "Atomic Borders",
     "troubleshooting": "Troubleshooting",
     "tutorial": "Tutorial",
-    "user_avatar_alt": "{username}'s avatar",
-    "wiki": "Wiki"
+    "user_avatar_alt": "{username}'s avatar"
   },
   "map": {
     "achiran": "Achiran",
@@ -3505,15 +3521,5 @@
     "you_won": "You Won!",
     "your_team": "Your team won!",
     "youtube_tutorial": "Need some help?"
-  },
-  "atomic_menu": {
-    "kicker": "// Command console",
-    "tagline": "Claim the map. Build the silos. Hold the line.",
-    "deploy": "Deploy",
-    "commands": "Commands",
-    "live_ops": "Live operations",
-    "callsign": "Callsign",
-    "source": "Source code",
-    "based_on": "Based on OpenFront"
   }
 }

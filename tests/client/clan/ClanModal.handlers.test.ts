@@ -853,7 +853,28 @@ describe("ClanModal — handlers", () => {
     });
   });
 
-  describe("donate", () => {
+  // Hidden in Atomic Borders: clan currency, the clan map and the donations
+  // ledger run on OpenFront services this fork does not have.
+  it("offers no Donate or Boost: an officer gets Manage and Leave", async () => {
+    const { fetchClanDetail } = await import("../../../src/client/ClanApi");
+    (fetchClanDetail as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      makeClan(),
+    );
+    setState(modal, "selectedClanTag" as keyof ClanModal, "TST" as never);
+    setState(
+      modal,
+      "myClanRoles" as keyof ClanModal,
+      new Map([["TST", "officer"]]) as never,
+    );
+    setState(modal, "view" as keyof ClanModal, "detail" as never);
+    await waitForSubComponent(modal, "clan-detail-view");
+    const grid = modal.querySelector("[data-clan-actions]")!;
+    expect(Array.from(grid.children).map((b) => b.textContent?.trim())).toEqual(
+      ["clan_modal.manage_clan", "clan_modal.leave_clan"],
+    );
+  });
+
+  describe.skip("donate", () => {
     const findDonateButton = () =>
       Array.from(modal.querySelectorAll("button")).find(
         (b) => b.textContent?.trim() === "clan_modal.donate",
@@ -970,7 +991,7 @@ describe("ClanModal — handlers", () => {
     });
   });
 
-  describe("boost", () => {
+  describe.skip("boost", () => {
     const findBoostButton = () =>
       modal.querySelector<HTMLButtonElement>('button[data-action="boost"]');
 
