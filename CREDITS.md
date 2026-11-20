@@ -198,3 +198,10 @@ Guild icon by Trimanggolo Mulyo – https://thenounproject.com/icon/guild-826614
 
 [Wikimedia Commons](https://commons.wikimedia.org/wiki/Flag)
 Licensed under [CC BY-SA 3.0 DE](https://creativecommons.org/licenses/by-sa/3.0/de/deed.en)
+
+## Atomic Borders audio
+
+The menu theme, gameplay tracks (resources/sounds/music/) and game-start alert
+(resources/sounds/effects/game-start-alert.mp3) were generated for Atomic Borders
+with ElevenLabs (Music v2.5, Sound Effects v3) via scripts/generate-audio.mts.
+

@@ -47,7 +47,8 @@
     "prepare": "husky",
     "gen-maps": "cd map-generator && go run -tags nodynamic . && npm run gen-map-schema",
     "gen-map-schema": "tsx scripts/genMapInfoSchema.ts && npx --no-install oxfmt --write map-generator/info.schema.json",
-    "inst": "npm ci --ignore-scripts"
+    "inst": "npm ci --ignore-scripts",
+    "gen-audio": "node --env-file-if-exists=.env.local --import tsx scripts/generate-audio.mts"
   },
   "lint-staged": {
     "**/*.{js,mjs,cjs,ts,jsx,tsx}": [
@@ -58,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.78.0",
     "@lit-labs/virtualizer": "^2.1.1",
     "@tailwindcss/vite": "^4.2.4",
     "@types/benchmark": "^2.1.5",
