@@ -25,6 +25,7 @@ import { fetchMapWeights, MAP_WEIGHTS_POLL_MS } from "./MapWeights";
 import { MasterLobbyService } from "./MasterLobbyService";
 import { setNoStoreHeaders } from "./NoStoreHeaders";
 import { startPolling } from "./PollingLoop";
+import { startApiServer } from "./api/ApiServer";
 import { renderAppShell } from "./RenderHtml";
 import { ServerEnv } from "./ServerEnv";
 import { applyStaticAssetCacheControl } from "./StaticAssetCache";
@@ -161,6 +162,12 @@ export async function startMaster() {
   }
 
   log.info(`Primary ${process.pid} is running`);
+
+  // The Atomic Borders API (accounts, stats, clans, ranked) on API_PORT.
+  await startApiServer({
+    issuer: ServerEnv.jwtIssuer(),
+    audience: ServerEnv.jwtAudience(),
+  });
   log.info(`Setting up ${ServerEnv.numWorkers()} workers...`);
 
   // A server that registers schedules nothing until the API calls it open: a

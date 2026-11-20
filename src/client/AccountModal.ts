@@ -92,6 +92,10 @@ function loadPrestigeFlow(): Promise<unknown> {
 // flourishes.
 let accountOpenings = 0;
 
+// Atomic Borders signs in with Discord and Google only: its API has no Steam
+// or email magic-link login, so those options stay hidden.
+const EXTRA_SIGN_IN_METHODS = false;
+
 @customElement("account-modal")
 export class AccountModal extends BaseModal {
   protected routerName = "account";
@@ -1106,7 +1110,7 @@ export class AccountModal extends BaseModal {
                  ticket, so the button would be a no-op that looks like an
                  option. -->
             ${
-              viaBrowser
+              viaBrowser || !EXTRA_SIGN_IN_METHODS
                 ? nothing
                 : html`<button
                     @click="${this.handleSteamLogin}"
@@ -1118,20 +1122,23 @@ export class AccountModal extends BaseModal {
                     >
                   </button>`
             }
+            ${
+              EXTRA_SIGN_IN_METHODS
+                ? html` <!-- Divider -->
+                    <div class="flex items-center gap-4 py-2">
+                      <div class="h-px bg-white/10 flex-1"></div>
+                      <span
+                        class="text-[10px] uppercase tracking-widest text-white/30 font-bold"
+                      >
+                        ${translateText("account_modal.or")}
+                      </span>
+                      <div class="h-px bg-white/10 flex-1"></div>
+                    </div>
 
-            <!-- Divider -->
-            <div class="flex items-center gap-4 py-2">
-              <div class="h-px bg-white/10 flex-1"></div>
-              <span
-                class="text-[10px] uppercase tracking-widest text-white/30 font-bold"
-              >
-                ${translateText("account_modal.or")}
-              </span>
-              <div class="h-px bg-white/10 flex-1"></div>
-            </div>
-
-            <!-- Email Recovery -->
-            <div class="space-y-3">${this.renderEmailField()}</div>
+                    <!-- Email Recovery -->
+                    <div class="space-y-3">${this.renderEmailField()}</div>`
+                : nothing
+            }
           </div>
 
           <!-- Not on Steam: the Steam ticket re-creates the session on reload. -->

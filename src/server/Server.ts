@@ -4,7 +4,8 @@ import { startMaster } from "./Master";
 import { startWorker } from "./Worker";
 
 // Load environment variables before we read configuration values derived from them.
-dotenv.config();
+// .env.local (gitignored) holds local secrets such as OAuth client secrets.
+dotenv.config({ path: [".env.local", ".env"], quiet: true });
 
 // Main entry point of the application
 async function main() {
