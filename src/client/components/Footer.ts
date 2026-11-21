@@ -9,7 +9,7 @@ import {
 import { currentGameVersion } from "../GameVersion";
 
 /** Where players can get this fork's source (AGPL-3.0 section 13). */
-const SOURCE_URL = "https://github.com/openfrontio/OpenFrontIO";
+const SOURCE_URL = "https://github.com/Thor-Sharky/AtomicBorders";
 /** The upstream project this game is based on. */
 const UPSTREAM_URL = "https://github.com/openfrontio/OpenFrontIO";
 
@@ -51,7 +51,7 @@ export class Footer extends LitElement {
           class="flex w-full flex-col items-center gap-1 lg:col-start-2 lg:w-auto"
         >
           <!-- AGPL-3.0 section 13: players can get this fork's source. Point
-               SOURCE_URL at your published repository before hosting. -->
+               SOURCE_URL points at this fork's public repository. -->
           <div
             class="ab-footer-links flex items-center justify-center gap-5 pt-2 w-full relative text-xs uppercase tracking-[0.18em]"
           >
