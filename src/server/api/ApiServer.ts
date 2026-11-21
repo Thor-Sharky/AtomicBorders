@@ -12,12 +12,14 @@ import http from "node:http";
 import path from "node:path";
 import { Accounts } from "./accounts";
 import { registerAuthRoutes } from "./auth";
+import { CATALOG } from "./catalog";
 import { registerClanRoutes } from "./clans";
 import { type ApiConfig, type ApiContext, cors } from "./context";
 import { type Db, openDb } from "./db";
 import { registerGameRoutes } from "./games";
 import { loadSigningKeys, type SigningKeys } from "./keys";
 import { Matchmaker } from "./matchmaking";
+import { registerProgressionRoutes } from "./progression";
 import { registerUserRoutes } from "./users";
 
 const BIG_BODY_PATHS = /^\/(game\/[^/]+|archive_singleplayer_game)$/;
@@ -52,13 +54,16 @@ export function createApiApp(
   registerUserRoutes(app, ctx);
   registerGameRoutes(app, ctx);
   registerClanRoutes(app, ctx);
+  registerProgressionRoutes(app, ctx);
   const matchmaker = new Matchmaker(ctx);
   matchmaker.register(app);
 
-  // An empty cosmetics catalog: no store here, but game servers need a valid
-  // catalog to switch on clan-tag checks and country flags (PrivilegeRefresher).
+  // The Atomic Borders catalog (catalog.ts): cosmetics unlocked by level. Game
+  // servers also need it to check equipped items and switch on clan-tag
+  // checks and country flags (PrivilegeRefresher).
   app.get("/cosmetics.json", (_req, res) => {
-    res.json({ patterns: {}, flags: {} });
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.json(CATALOG);
   });
 
   // Everything else OpenFront's API offered (store, cosmetics, news, Steam...)

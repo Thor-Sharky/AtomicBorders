@@ -122,6 +122,30 @@ const MIGRATIONS: string[] = [
     PRIMARY KEY (tag, player_id)
   );
   `,
+  // 4: XP and levels
+  `
+  CREATE TABLE progress (
+    player_id    TEXT PRIMARY KEY REFERENCES players(id) ON DELETE CASCADE,
+    lifetime_xp  INTEGER NOT NULL
+  );
+  CREATE TABLE game_xp (
+    player_id   TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    game_id     TEXT NOT NULL,
+    breakdown   TEXT NOT NULL,           -- json XpBreakdown
+    before_xp   INTEGER NOT NULL,
+    after_xp    INTEGER NOT NULL,
+    eligible    INTEGER NOT NULL,
+    created_at  INTEGER NOT NULL,
+    PRIMARY KEY (player_id, game_id)
+  );
+  CREATE TABLE xp_daily (
+    player_id           TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+    day                 TEXT NOT NULL,   -- UTC YYYY-MM-DD
+    singleplayer_games  INTEGER NOT NULL,
+    private_games       INTEGER NOT NULL,
+    PRIMARY KEY (player_id, day)
+  );
+  `,
 ];
 
 export function openDb(file: string): Db {

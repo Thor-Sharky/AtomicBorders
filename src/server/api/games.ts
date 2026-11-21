@@ -26,6 +26,7 @@ import { z } from "zod";
 import type { PlayerRow } from "./accounts";
 import { type ApiContext, requireApiKey, requirePlayer } from "./context";
 import { tx } from "./db";
+import { awardGameXp } from "./progression";
 import { applyMatch, type Ladder, type RatingRow } from "./ratings";
 
 const PAGE_SIZE = 50;
@@ -97,7 +98,22 @@ export function ingestGame(
         p.team ?? null,
         won ? 1 : 0,
       );
-      if (account) rated.push({ id: account, won });
+      if (account) {
+        rated.push({ id: account, won });
+        // XP for every account that played (catalog unlocks follow levels).
+        const killedAt = p.stats?.killedAt;
+        awardGameXp(ctx.db, account, {
+          gameId: info.gameID,
+          gameType: cfg.gameType,
+          gameMode: cfg.gameMode,
+          ranked: !!cfg.rankedType,
+          won,
+          aliveTicks:
+            killedAt === undefined || killedAt === null
+              ? info.num_turns
+              : Number(killedAt),
+        });
+      }
     }
 
     if (opts.rated && info.winner) {
