@@ -108,8 +108,10 @@ export class Accounts {
       player ??= this.createPlayer(p.displayName);
       if (player.username === null && p.displayName) {
         this.db
-          .prepare("UPDATE players SET username = ? WHERE id = ?")
-          .run(p.displayName, player.id);
+          .prepare(
+            "UPDATE players SET username = ?, username_set_at = ? WHERE id = ?",
+          )
+          .run(p.displayName, Date.now(), player.id);
         player = { ...player, username: p.displayName };
       }
       this.db
@@ -176,6 +178,65 @@ export class Accounts {
         "UPDATE refresh_tokens SET revoked_at = ? WHERE player_id = ? AND revoked_at IS NULL",
       )
       .run(Date.now(), playerId);
+  }
+
+  /**
+   * How a signed-in account's name displays. The earliest signed-in account
+   * with a name holds it bare; later ones show it with a stable 4-digit
+   * suffix (base.1234). Verified names are free in Atomic Borders, so every
+   * signed-in account is entitled ("indefinite").
+   */
+  accountName(player: PlayerRow): {
+    username: string;
+    base: string;
+    discriminator: string;
+    bare: boolean;
+  } | null {
+    if (!player.username || this.identities(player.id).length === 0) {
+      return null;
+    }
+    const holder = this.db
+      .prepare(
+        `SELECT p.id FROM players p
+          WHERE lower(p.username) = lower(?)
+            AND EXISTS (SELECT 1 FROM identities i WHERE i.player_id = p.id)
+          ORDER BY COALESCE(p.username_set_at, p.created_at), p.id LIMIT 1`,
+      )
+      .get(player.username) as { id: string } | undefined;
+    const bare = holder?.id === player.id;
+    const discriminator = String(
+      parseInt(
+        crypto.createHash("sha256").update(player.id).digest("hex").slice(0, 8),
+        16,
+      ) % 10000,
+    ).padStart(4, "0");
+    return {
+      username: bare ? player.username : `${player.username}.${discriminator}`,
+      base: player.username,
+      discriminator,
+      bare,
+    };
+  }
+
+  /** Whether another signed-in account already holds `name` bare. */
+  nameHeldByOther(name: string, playerId: string): boolean {
+    const row = this.db
+      .prepare(
+        `SELECT p.id FROM players p
+          WHERE lower(p.username) = lower(?)
+            AND EXISTS (SELECT 1 FROM identities i WHERE i.player_id = p.id)
+          ORDER BY COALESCE(p.username_set_at, p.created_at), p.id LIMIT 1`,
+      )
+      .get(name) as { id: string } | undefined;
+    return row !== undefined && row.id !== playerId;
+  }
+
+  setUsername(playerId: string, name: string) {
+    this.db
+      .prepare(
+        "UPDATE players SET username = ?, username_set_at = ? WHERE id = ?",
+      )
+      .run(name, Date.now(), playerId);
   }
 
   /** Primary sign-in provider for the JWT `provider` claim, or null for a guest. */

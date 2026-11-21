@@ -530,8 +530,10 @@ export class UsernameInput extends LitElement {
         confirmText: translateText("username.verified_sub_required_confirm"),
       },
     );
+    // Atomic Borders: verified names are free with a signed-in account, so
+    // the only way to be ineligible here is not being signed in.
     if (goStore) {
-      window.location.hash = "modal=store&tab=subscriptions";
+      window.showPage?.("page-account");
     }
   }
 

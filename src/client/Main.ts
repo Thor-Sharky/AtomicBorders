@@ -507,9 +507,12 @@ class Client {
     // Register modals with the URL router. Lobby modals (join/host) and
     // matchmaking are intentionally omitted — they own their own URL state
     // (path-based) or none at all.
+    // No store in Atomic Borders: cosmetics unlock by levelling up. Every old
+    // "#modal=store" link (equipped-cosmetic shortcuts, nudges) lands on the
+    // Inventory, where unlocked and locked items are listed.
     modalRouter.register("store", {
-      tag: "store-modal",
-      pageId: "page-item-store",
+      tag: "inventory-modal",
+      pageId: "page-inventory",
     });
     modalRouter.register("settings", {
       tag: "user-setting",

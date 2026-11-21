@@ -146,6 +146,11 @@ const MIGRATIONS: string[] = [
     PRIMARY KEY (player_id, day)
   );
   `,
+  // 5: when an account name was claimed (the first claimant keeps it bare)
+  `
+  ALTER TABLE players ADD COLUMN username_set_at INTEGER;
+  UPDATE players SET username_set_at = created_at WHERE username IS NOT NULL;
+  `,
 ];
 
 export function openDb(file: string): Db {
