@@ -39,6 +39,7 @@ import {
   ResolvedCosmetic,
   resolvedToPlayerPattern,
 } from "./Cosmetics";
+import { fetchProgressionConfig } from "./ProgressionApi";
 import {
   CROWN_KEY,
   EFFECTS_KEY,
@@ -73,6 +74,9 @@ export class InventoryModal extends BaseModal {
   @state() private isLoading = false;
   @state() private loadFailed = false;
   @state() private ownershipState: OwnershipState = "loading";
+  // Level each cosmetic unlocks at (Atomic Borders: cosmetics come from
+  // levelling up, not purchases), keyed by its flare.
+  @state() private unlockLevels: Map<string, number> = new Map();
   @state() private previewingCosmetic: ResolvedCosmetic | null = null;
 
   private cosmetics: Cosmetics | null = null;
@@ -220,10 +224,80 @@ export class InventoryModal extends BaseModal {
     return guarded;
   }
 
+  private loadUnlockLevels(): void {
+    void fetchProgressionConfig().then((config) => {
+      if (config === false) return;
+      this.unlockLevels = new Map(
+        config.flares
+          .filter((f) => f.level !== null)
+          .map((f) => [f.flareName, f.level!]),
+      );
+    });
+  }
+
+  private unlockFlare(r: ResolvedCosmetic): string | null {
+    if (r.cosmetic === null) return null;
+    if (r.type === "pattern") {
+      return r.colorPalette
+        ? `pattern:${r.cosmetic.name}:${r.colorPalette.name}`
+        : null;
+    }
+    if (r.type === "effect") return `effect:${r.cosmetic.name}`;
+    return null;
+  }
+
+  /** Items still locked behind a level, lowest level first. */
+  private renderLocked(types: readonly ResolvedCosmetic["type"][]) {
+    const locked = this.resolvedItems()
+      .filter(
+        (r) =>
+          types.includes(r.type) &&
+          r.relationship !== "owned" &&
+          r.cosmetic !== null &&
+          this.includedInSearch(r.cosmetic.name),
+      )
+      .map((r) => ({
+        r,
+        level: this.unlockLevels.get(this.unlockFlare(r) ?? ""),
+      }))
+      .filter(
+        (x): x is { r: ResolvedCosmetic; level: number } =>
+          x.level !== undefined,
+      )
+      .sort((a, b) => a.level - b.level);
+    if (locked.length === 0) return nothing;
+    return html`
+      <h3
+        data-inventory-locked
+        class="px-4 pt-5 text-xs font-bold uppercase tracking-[0.2em] text-white/50"
+      >
+        ${translateText("inventory.locked_heading")}
+      </h3>
+      <div
+        class="grid grid-cols-2 gap-3 p-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      >
+        ${locked.map(
+          ({ r, level }) =>
+            html`<div class="relative opacity-50 grayscale">
+              <cosmetic-card
+                .resolved=${r}
+                .interactive=${false}
+              ></cosmetic-card>
+              <span
+                class="absolute left-2 top-2 rounded bg-black/80 px-2 py-0.5 text-[11px] font-bold text-amber-300"
+                >${translateText("inventory.unlocks_at_level", { level })}</span
+              >
+            </div>`,
+        )}
+      </div>
+    `;
+  }
+
   private async loadInventory(
     userMeResponse?: UserMeResponse | false,
   ): Promise<void> {
     const loadId = ++this.inventoryLoadId;
+    this.loadUnlockLevels();
     this.isLoading = true;
     this.loadFailed = false;
     this.ownershipState = "loading";
@@ -630,23 +704,18 @@ export class InventoryModal extends BaseModal {
           title: translateText("inventory.title"),
           onBack: () => this.close(),
           ariaLabel: translateText("common.back"),
-          rightContent: html`<o-button
-            data-inventory-header-action
-            class="no-game-portal"
-            variant=${isLoggedIn ? "primary" : "danger"}
-            size="sm"
-            .translationKey=${
-              isLoggedIn ? "main.store" : "common.not_logged_in"
-            }
-            @click=${() => {
-              if (isLoggedIn) {
-                this.close();
-                window.location.hash = "modal=store&tab=cosmetics";
-              } else {
-                window.showPage?.("page-account");
-              }
-            }}
-          ></o-button>`,
+          // No store in Atomic Borders: cosmetics unlock by levelling up.
+          // Guests still get the sign-in prompt.
+          rightContent: isLoggedIn
+            ? undefined
+            : html`<o-button
+                data-inventory-header-action
+                class="no-game-portal"
+                variant="danger"
+                size="sm"
+                .translationKey=${"common.not_logged_in"}
+                @click=${() => window.showPage?.("page-account")}
+              ></o-button>`,
         })}
 
         <div class="md:flex items-center gap-2 justify-center mt-4">
@@ -737,9 +806,12 @@ export class InventoryModal extends BaseModal {
           .userMeResponse=${this.userMeResponse}
           .search=${this.search}
         ></effects-grid>
+        ${this.renderLocked(["effect"])}
       </div>`;
     } else {
-      grid = html`${this.renderUnequip("skins")}${this.renderSkinGrid()}`;
+      grid = html`${this.renderUnequip("skins")}${this.renderSkinGrid()}${this.renderLocked(
+        ["pattern"],
+      )}`;
     }
     const category = tab as InventoryCategory;
     return html`

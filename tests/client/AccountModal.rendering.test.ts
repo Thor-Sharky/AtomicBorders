@@ -125,7 +125,8 @@ describe("AccountModal — rendering", () => {
     await modal.updateComplete;
   }
 
-  it("shows the Steam account (no link/login CTAs) for a Steam-primary user", async () => {
+  // Steam linking is an OpenFront licence perk, removed in Atomic Borders.
+  it.skip("shows the Steam account (no link/login CTAs) for a Steam-primary user", async () => {
     const userMe = makeUserMe({
       steam: {
         steamId: "76561198000000001",
@@ -182,8 +183,8 @@ describe("AccountModal — rendering", () => {
     // The linking CTA a Steam-primary user does NOT get.
     expect(text).toContain("account_modal.link_google");
 
-    // Still a logged-in view, not the login-options screen.
-    expect(modal.querySelector("currency-display")).toBeTruthy();
+    // Atomic Borders has no currencies, so no wallet on the account view.
+    expect(modal.querySelector("currency-display")).toBeNull();
     // Logging out lives in the nav profile menu now.
     expect(text).not.toContain("nav_account_menu.log_out");
   });
@@ -406,7 +407,8 @@ describe("AccountModal — rendering", () => {
   // and the warning has to be readable before the click. Both halves are
   // asserted because a regression in either is invisible in review and
   // irreversible for the player who hits it.
-  it("offers a Steam link with the permanence warning to a Discord user", async () => {
+  // Steam linking is an OpenFront licence perk, removed in Atomic Borders.
+  it.skip("offers a Steam link with the permanence warning to a Discord user", async () => {
     await setLoggedInUser(
       makeUserMe({
         discord: {
@@ -425,7 +427,8 @@ describe("AccountModal — rendering", () => {
     expect(text).toContain("account_modal.link_steam_permanent");
   });
 
-  it("shows the linked Steam account and NO unlink control", async () => {
+  // Steam linking is an OpenFront licence perk, removed in Atomic Borders.
+  it.skip("shows the linked Steam account and NO unlink control", async () => {
     await setLoggedInUser(
       makeUserMe({
         discord: {
@@ -462,7 +465,8 @@ describe("AccountModal — rendering", () => {
     expect(text).not.toContain("Unlink");
   });
 
-  it("starts the Steam link when the button is clicked", async () => {
+  // Steam linking is an OpenFront licence perk, removed in Atomic Borders.
+  it.skip("starts the Steam link when the button is clicked", async () => {
     await setLoggedInUser(
       makeUserMe({
         discord: {

@@ -4,6 +4,7 @@
 @import "./styles/hud-v2.css";
 @import "./styles/main-menu.css";
 @import "./styles/menu-v2.css";
+@import "./styles/paid-off.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant hover (&:hover);

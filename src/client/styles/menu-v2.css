@@ -100,6 +100,9 @@
   .ab-rail [data-page="page-play"] {
     --ab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 4l14 8-14 8z'/%3E%3C/svg%3E");
   }
+  .ab-rail [data-page="page-inventory"] {
+    --ab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 7h16v13H4zm3-4h10v3H7zm2 8h6v2H9z'/%3E%3C/svg%3E");
+  }
   .ab-rail [data-page="page-leaderboard"] {
     --ab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 20V10h4v10zm6 0V4h4v16zm6 0v-7h4v7z'/%3E%3C/svg%3E");
   }

@@ -102,7 +102,9 @@ export class MobileNavBar extends LitElement {
           data-page="page-play"
           data-i18n="main.play"
         ></button>
+        <!-- Store: OpenFront paid cosmetics; Atomic Borders unlocks by level. -->
         <div
+          hidden
           class="no-game-portal nav-menu-item flex items-center w-full cursor-pointer"
           data-page="page-item-store"
           @click=${this._notifications.onStoreClick}

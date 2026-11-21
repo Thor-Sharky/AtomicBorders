@@ -142,7 +142,8 @@ describe("AccountModal — after a prestige", () => {
     await modal.updateComplete;
   };
 
-  it("tells the rewards panel a linked account is signed in", () => {
+  // No rewards panel in Atomic Borders (level rewards are unlocks, not claims).
+  it.skip("tells the rewards panel a linked account is signed in", () => {
     const panel = modal.querySelector("rewards-panel") as unknown as {
       signedIn: boolean;
     } | null;

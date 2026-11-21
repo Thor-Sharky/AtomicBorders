@@ -73,7 +73,7 @@ export class LeaderboardModal extends BaseModal {
           ),
         },
         { key: "clans", label: translateText("leaderboard_modal.clans_tab") },
-        { key: "tribes", label: translateText("leaderboard_modal.tribes_tab") },
+        // No "tribes" tab: it ranks paid bot tribe names, an OpenFront purchase.
       ],
     };
   }

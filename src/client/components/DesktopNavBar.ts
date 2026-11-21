@@ -78,7 +78,8 @@ export class DesktopNavBar extends LitElement {
           data-i18n="main.play"
         ></button>
         <!-- Desktop Navigation Menu Items -->
-        <!-- Store/Inventory: OpenFront paid cosmetics (closed API), hidden in Atomic Borders. -->
+        <!-- Store: OpenFront paid cosmetics, hidden. Inventory below holds the
+             cosmetics a player has unlocked by levelling up. -->
         <div class="relative no-game-portal hidden">
           <button
             class="nav-menu-item ${
@@ -106,7 +107,6 @@ export class DesktopNavBar extends LitElement {
             currentPage === "page-inventory" ? "active" : ""
           } ab-nav-item "
           data-page="page-inventory"
-          hidden
           data-i18n="main.inventory"
         ></button>
         <button

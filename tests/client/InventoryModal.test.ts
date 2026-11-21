@@ -414,12 +414,9 @@ describe("InventoryModal", () => {
   });
 
   it("keeps the auth-aware action in the modal header", async () => {
-    let action = modal.querySelector<HTMLElement>(
-      "[data-inventory-header-action]",
-    )!;
-    await (action as LitElement).updateComplete;
-    expect(action.closest('[slot="header"]')).toBeTruthy();
-    expect(action.textContent?.trim()).toBe("Store");
+    // Atomic Borders has no store: a signed-in player gets no header action.
+    expect(modal.querySelector("[data-inventory-header-action]")).toBeNull();
+    let action: HTMLElement;
 
     Object.assign(modal as unknown as Record<string, unknown>, {
       userMeResponse: false,
@@ -477,7 +474,8 @@ describe("InventoryModal", () => {
     }
   });
 
-  it("deep-links to the store cosmetics tab from the header action", async () => {
+  // No store to link to in Atomic Borders (cosmetics unlock by level).
+  it.skip("deep-links to the store cosmetics tab from the header action", async () => {
     const originalHash = window.location.hash;
     try {
       const action = modal.querySelector<HTMLElement>(

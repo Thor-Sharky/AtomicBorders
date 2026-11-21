@@ -95,6 +95,9 @@ let accountOpenings = 0;
 // Atomic Borders signs in with Discord and Google only: its API has no Steam
 // or email magic-link login, so those options stay hidden.
 const EXTRA_SIGN_IN_METHODS = false;
+// Currencies, level rewards to claim, creator codes and Steam licence linking
+// were OpenFront paid features; Atomic Borders has none of them.
+const PAID_FEATURES = false;
 
 @customElement("account-modal")
 export class AccountModal extends BaseModal {
@@ -607,6 +610,7 @@ export class AccountModal extends BaseModal {
   }
 
   private renderRewardsPanel(): TemplateResult | "" {
+    if (!PAID_FEATURES) return html``;
     const rewards = this.userMeResponse?.player?.rewards ?? [];
     if (rewards.length === 0) return "";
     return html`<rewards-panel
@@ -623,6 +627,7 @@ export class AccountModal extends BaseModal {
   // portal identity comes from the SDK, not the /users/@me `player`
   // record this panel reads its state from.
   private renderCreatorCodePanel(): TemplateResult {
+    if (!PAID_FEATURES) return html``;
     return html`<creator-code-panel
       .creator=${this.userMeResponse?.player?.creator}
       .prefillCode=${this.prefillCreatorCode}
@@ -778,6 +783,7 @@ export class AccountModal extends BaseModal {
   }
 
   private renderCurrency(): TemplateResult {
+    if (!PAID_FEATURES) return html``;
     const currency = this.userMeResponse?.player?.currency;
     if (!currency) return html``;
 
@@ -884,6 +890,7 @@ export class AccountModal extends BaseModal {
   // Not shown inside the desktop shell: a shell player already holds this
   // identity through the native Steam ticket.
   private renderSteamLink(): TemplateResult {
+    if (!PAID_FEATURES) return html``;
     if (isSteamShell()) return html``;
     const steam = this.userMeResponse?.user?.steam;
     if (steam) {

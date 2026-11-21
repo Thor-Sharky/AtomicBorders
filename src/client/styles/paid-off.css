@@ -1,0 +1,31 @@
+/*
+ * Atomic Borders has no paid features: no ads, subscriptions, currencies,
+ * store, packs, purchase nudges, creator codes, paid tribe names or Steam
+ * licence perks. Cosmetics unlock by levelling up instead.
+ *
+ * Most of these components already stay dormant (the Atomic Borders API
+ * reports no ads, subscription or currency, and the catalog has no prices),
+ * but they are kept mounted because startup code looks some of them up. This
+ * guarantees none can ever appear.
+ */
+homepage-promos,
+in-game-promo,
+purchase-nudge-modal,
+subscription-modal,
+marketing-consent-toast,
+steam-link-modal,
+steam-handoff-modal,
+rewards-modal,
+currency-display,
+rewards-panel,
+creator-code-panel,
+subscription-panel,
+tribes-panel,
+purchase-button,
+custom-currency-card,
+insufficient-currency-dialog,
+steam-wishlist,
+steam-wishlist-button,
+[data-win-cosmetic-promo] {
+  display: none !important;
+}

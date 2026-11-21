@@ -303,7 +303,8 @@ describe("AccountModal — Progression tab", () => {
     expect(el.querySelector("[data-current-run]")).not.toBeNull();
   });
 
-  it("Claim all updates the account and tells the page", async () => {
+  // No reward claims in Atomic Borders (level rewards are unlocks, not claims).
+  it.skip("Claim all updates the account and tells the page", async () => {
     const el = await openOnProgression();
     const after = ownRewards().filter((r) => r.id === "win");
     // The account as the API has it after the claims.
