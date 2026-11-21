@@ -742,7 +742,7 @@ export class UnitDisplay extends LitElement implements Controller {
 
     return html`
       <div
-        class="flex flex-col items-center relative"
+        class="ab-slot-wrap flex flex-col items-center relative"
         @mouseenter=${(event: MouseEvent) => {
           const item = event.currentTarget as HTMLElement;
           this._hoveredUnitTooltip = {
@@ -763,8 +763,8 @@ export class UnitDisplay extends LitElement implements Controller {
         }}
       >
         <div
-          class="${
-            this.canBuild(unitType) ? "" : "opacity-40"
+          class="ab-slot ${selected ? "ab-slot-selected" : ""} ${
+            this.canBuild(unitType) ? "" : "ab-slot-locked opacity-40"
           } border border-slate-500 rounded-sm max-lg:landscape:h-7.5 side-bar:h-12 side-bar:min-w-6.5 w-full px-0.5 side-bar:px-0 pb-0.5 flex items-center justify-center gap-0.5 cursor-pointer lg:justify-start
              ${
             selected
@@ -842,6 +842,9 @@ export class UnitDisplay extends LitElement implements Controller {
               alt=${translateText("unit_type." + structureKey)}
               class="align-middle size-6 lg:size-5 max-lg:landscape:size-5"
             />
+            <span class="ab-slot-name hidden"
+              >${translateText("unit_type." + structureKey)}</span
+            >
             ${
               number !== null
                 ? html`<span class="hidden lg:inline text-xs leading-none"

@@ -1004,11 +1004,16 @@
   "control_panel": {
     "allied_afk_neighbor_info": "You can attack disconnected players even if you are allied with them.",
     "army_limit_warning": "You're near your army limit! Consider sending troops to teammates.",
+    "attack_force": "Attack force",
     "attack_ratio": "{percent}%\n({troops})",
     "attack_ratio_button": "Attack ratio: {percent}%",
+    "card_title": "Command",
+    "gold": "Gold",
+    "growth": "Growth",
     "low_troops_warning": "You are very low on troops - You should always keep some troops for defense.",
     "teammate_afk_neighbor_info": "You can attack disconnected teammates.",
-    "traitor_neighbor_info": "You can betray traitors without becoming a traitor yourself."
+    "traitor_neighbor_info": "You can betray traitors without becoming a traitor yourself.",
+    "troops": "Troops"
   },
   "cosmetics": {
     "adfree": "ad-free for life!",
@@ -1894,6 +1899,7 @@
     "login_google": "Login with Google",
     "login_steam": "Login with Steam",
     "menu": "Menu",
+    "nav_section": "Navigation",
     "news": "News",
     "play": "Play",
     "privacy_policy": "Privacy Policy",

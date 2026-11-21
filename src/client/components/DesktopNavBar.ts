@@ -54,12 +54,12 @@ export class DesktopNavBar extends LitElement {
     // not the sticky host, so the host's offset below a header ad stays exact.
     return html`
       <nav
-        class="ab-nav hidden lg:flex w-full items-center gap-7 px-8 py-3 shrink-0 z-50 relative compact:[zoom:0.75]"
+        class="ab-nav ab-rail hidden lg:flex shrink-0 z-50 compact:[zoom:0.75]"
       >
-        <div class="flex flex-col items-start justify-center mr-4">
-          <div class="h-9">
+        <div class="ab-rail-brand">
+          <div class="ab-rail-logo">
             <img
-              class="block h-full aspect-[1364/259]"
+              class="block w-full h-auto aspect-[1364/259]"
               src=${assetUrl("images/AtomicBordersLogo.svg")}
               alt="Atomic Borders"
             />
@@ -69,6 +69,7 @@ export class DesktopNavBar extends LitElement {
             class="l-header__highlightText text-center"
           ></div>
         </div>
+        <div class="ab-rail-section" data-i18n="main.nav_section"></div>
         <button
           class="nav-menu-item ${
             currentPage === "page-play" ? "active" : ""
@@ -122,9 +123,7 @@ export class DesktopNavBar extends LitElement {
              account/notification/utility affordances rather than page links,
              so they sit tight together behind a divider instead of in the nav
              item list. -->
-        <div
-          class="flex items-center gap-1 pl-5 ml-auto border-l border-white/10"
-        >
+        <div class="ab-rail-utils">
           <nav-utility-icons size="desktop"></nav-utility-icons>
           <nav-account-menu variant="desktop"></nav-account-menu>
         </div>

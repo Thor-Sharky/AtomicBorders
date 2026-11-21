@@ -1,0 +1,176 @@
+/*
+ * Atomic Borders main menu v2: a left command rail instead of a top nav bar,
+ * and live games as equal "operation rows" instead of OpenFront's hero card.
+ * Loaded after main-menu.css and overrides parts of it. Desktop only (lg+);
+ * phones keep their own top bar and stacked layout.
+ */
+
+:root {
+  --ab-rail-w: 236px;
+}
+
+@media (min-width: 1024px) {
+  /* --- Command rail ---------------------------------------------------- */
+
+  body:not(.in-game) desktop-nav-bar {
+    position: fixed !important;
+    inset: 0 auto 0 0;
+    width: var(--ab-rail-w);
+    z-index: 60;
+  }
+  /* The page column makes room for the rail. */
+  body:not(.in-game) div:has(> desktop-nav-bar) {
+    padding-left: var(--ab-rail-w);
+  }
+
+  .ab-rail {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem;
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 0 !important;
+    border-right: 1px solid var(--ab-line);
+    background:
+      linear-gradient(180deg, rgba(159, 212, 107, 0.06), transparent 30%),
+      linear-gradient(180deg, #060b10, #08111a) !important;
+    backdrop-filter: none !important;
+  }
+
+  .ab-rail-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0 0.35rem 1.4rem;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(159, 212, 107, 0.12);
+  }
+  .ab-rail-logo {
+    width: 100%;
+  }
+
+  .ab-rail-section {
+    padding: 0.4rem 0.75rem 0.5rem;
+    color: var(--ab-green);
+    font-family: var(--ab-mono);
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .ab-rail-section::before {
+    content: "// ";
+  }
+
+  .ab-rail .ab-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    text-align: left;
+    font-size: 0.9rem;
+    letter-spacing: 0.14em;
+    border-left: 2px solid transparent;
+    transition:
+      background-color 0.12s ease,
+      color 0.12s ease,
+      border-color 0.12s ease;
+  }
+  .ab-rail .ab-nav-item::before {
+    content: "";
+    flex: none;
+    width: 1.05rem;
+    height: 1.05rem;
+    background: currentColor;
+    mask: var(--ab-icon) center / contain no-repeat;
+  }
+  .ab-rail .ab-nav-item:hover {
+    background: rgba(159, 212, 107, 0.06);
+  }
+  .ab-rail .ab-nav-item.active {
+    background: linear-gradient(90deg, rgba(159, 212, 107, 0.16), transparent);
+    border-left-color: var(--ab-green);
+  }
+  /* main-menu.css draws an underline for the old top bar. */
+  .ab-rail .ab-nav-item.active::after {
+    display: none;
+  }
+
+  .ab-rail [data-page="page-play"] {
+    --ab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 4l14 8-14 8z'/%3E%3C/svg%3E");
+  }
+  .ab-rail [data-page="page-leaderboard"] {
+    --ab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 20V10h4v10zm6 0V4h4v16zm6 0v-7h4v7z'/%3E%3C/svg%3E");
+  }
+  .ab-rail [data-page="page-clan"] {
+    --ab-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l8 3v6c0 5-3.4 9.4-8 11-4.6-1.6-8-6-8-11V5z'/%3E%3C/svg%3E");
+  }
+
+  .ab-rail-utils {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding: 0.9rem 0.35rem 0;
+    border-top: 1px solid rgba(159, 212, 107, 0.12);
+  }
+
+  /* --- Operations: equal rows, map faded in on the right ---------------- */
+
+  .ab-ops .ab-ops-feature,
+  .ab-ops .ab-ops-card {
+    width: 100%;
+  }
+  .ab-ops > div.grid {
+    grid-template-columns: 1fr !important;
+  }
+  .ab-ops-feature button.group.\@container,
+  .ab-ops-card button.group.\@container {
+    height: 7.75rem !important;
+  }
+  .ab-ops button.group.\@container img {
+    left: auto !important;
+    right: 0;
+    width: 62% !important;
+    mask-image: linear-gradient(90deg, transparent, #000 45%);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%);
+  }
+  /* Title block: bottom-left (event tags keep the top-left), no dark strip. */
+  .ab-ops button.group.\@container [class*="bg-black/65"] {
+    top: auto !important;
+    bottom: 0.6rem !important;
+    right: auto !important;
+    max-width: 55%;
+    padding: 0 1.1rem !important;
+    background: none !important;
+    border: 0 !important;
+  }
+  .ab-ops button.group.\@container [class*="bg-black/65"] span.text-sm {
+    font-family: var(--ab-display);
+    font-size: 1.3rem !important;
+    letter-spacing: 0.08em;
+  }
+  /* Player count: inline under the title instead of floating above it. */
+  .ab-ops
+    button.group.\@container
+    [class*="bg-black/65"]
+    > [class*="bottom-full"] {
+    position: static !important;
+    order: 3;
+    align-self: flex-start;
+    margin: 0.3rem 0 0 !important;
+  }
+  /* Event tags side by side, so two of them don't stack into the title. */
+  .ab-ops button.group.\@container > div.absolute.inset-x-2 > div:first-child {
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 60%;
+  }
+  /* Featured row: an amber marker. */
+  .ab-ops-feature button.group.\@container {
+    border-left: 3px solid var(--ab-amber) !important;
+  }
+}
